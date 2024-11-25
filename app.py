@@ -1632,7 +1632,7 @@ def chat_interface():
         api_key = st.text_input("Anthropic API 키를 입력하세요:", type="password")
         
         # API 키 확인 버튼
-        if st.button("API 키 확인", key="check_api"):
+        if st.button("API 키 확인"):
             client = initialize_anthropic_client(api_key)
             if client:
                 st.success("유효한 API 키입니다. 연구계획서 작성하기 버튼을 눌러 시작하세요.")
@@ -1643,17 +1643,13 @@ def chat_interface():
         st.write("")
         st.write("")
         
-        # 스타일 정의 - 특정 key를 가진 버튼에만 스타일 적용
-        st.markdown("""
+        # 큰 버튼을 위한 컨테이너
+        button_container = st.container()
+        
+        # 스타일 정의
+        button_container.markdown("""
             <style>
-            div[data-testid="stButton"] > button[kind="secondary"] {
-                width: auto;
-                height: auto;
-                background-color: inherit;
-                color: inherit;
-                font-size: inherit;
-            }
-            div[data-testid="stButton"] > button[data-testid="start_writing"] {
+            div[data-testid="element-container"]:nth-child(7) div[data-testid="stButton"] button {
                 width: 100%;
                 height: 100px;
                 font-size: 24px;
@@ -1667,15 +1663,16 @@ def chat_interface():
         """, unsafe_allow_html=True)
         
         # 연구계획서 작성하기 버튼
-        if st.button("연구계획서 작성하기 ✏️", key="start_writing"):  # 특정 key 사용
-            if 'temp_api_key' in st.session_state:
-                st.session_state.api_key = st.session_state.temp_api_key
-                st.session_state.anthropic_client = initialize_anthropic_client(st.session_state.api_key)
-                del st.session_state.temp_api_key
-                st.success("API 키가 설정되었습니다!")
-                st.rerun()
-            else:
-                st.warning("먼저 API 키를 입력하고 확인해주세요.")
+        with button_container:
+            if st.button("연구계획서 작성하기 ✏️"):
+                if 'temp_api_key' in st.session_state:
+                    st.session_state.api_key = st.session_state.temp_api_key
+                    st.session_state.anthropic_client = initialize_anthropic_client(st.session_state.api_key)
+                    del st.session_state.temp_api_key
+                    st.success("API 키가 설정되었습니다!")
+                    st.rerun()
+                else:
+                    st.warning("먼저 API 키를 입력하고 확인해주세요.")
 
     # API 키가 설정된 후의 메인 인터페이스
     else:

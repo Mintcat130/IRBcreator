@@ -1632,36 +1632,44 @@ def chat_interface():
         api_key = st.text_input("Anthropic API 키를 입력하세요:", type="password")
         
         # API 키 확인 버튼
-        if st.button("API 키 확인"):
-            client = initialize_anthropic_client(api_key)
-            if client:
-                st.success("유효한 API 키입니다. 연구계획서 작성하기 버튼을 눌러 시작하세요.")
-                st.session_state.temp_api_key = api_key
-            else:
-                st.error("API 키 설정에 실패했습니다. 키를 다시 확인해 주세요.")
+        col1, col2 = st.columns([1, 2])  # 컬럼을 나누어 버튼 크기 조절
+        with col1:
+            if st.button("API 키 확인", key="check_api"):
+                client = initialize_anthropic_client(api_key)
+                if client:
+                    st.success("유효한 API 키입니다. 연구계획서 작성하기 버튼을 눌러 시작하세요.")
+                    st.session_state.temp_api_key = api_key
+                else:
+                    st.error("API 키 설정에 실패했습니다. 키를 다시 확인해 주세요.")
 
         st.write("")
         st.write("")
         
-        # 특정 버튼만 스타일 적용
+        # 메인 버튼 스타일
         st.markdown("""
             <style>
-            /* start_button에만 스타일 적용 */
-            [data-testid="baseButton-secondary"]:has(div:contains("연구계획서 작성하기")) {
+            div.stButton > button {
                 width: 100%;
                 height: 100px;
                 font-size: 24px;
                 font-weight: bold;
                 background-color: #4CAF50;
                 color: white;
-                border-radius: 12px;
-                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            }
+            /* API 키 확인 버튼 스타일 복원 */
+            button[data-testid="check_api"] {
+                width: auto !important;
+                height: auto !important;
+                font-size: inherit !important;
+                font-weight: normal !important;
+                background-color: transparent !important;
+                color: inherit !important;
             }
             </style>
         """, unsafe_allow_html=True)
         
         # 연구계획서 작성하기 버튼
-        if st.button("연구계획서 작성하기 ✏️"):
+        if st.button("연구계획서 작성하기 ✏️", key="start_button"):
             if 'temp_api_key' in st.session_state:
                 st.session_state.api_key = st.session_state.temp_api_key
                 st.session_state.anthropic_client = initialize_anthropic_client(st.session_state.api_key)

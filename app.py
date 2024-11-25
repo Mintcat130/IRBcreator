@@ -1020,6 +1020,8 @@ def write_sample_size():
     st.write("""이미 정해진 대상자 수가 있다면 입력해주세요. 
              
 없다면 비워두고 AI 추천받기 버튼을 눌러 추천받으세요.""")
+    st.markdown("---")
+    st.markdown("👤 **사용자 입력**")
 
         # 사용자 입력 대상자 수
     col1, col2 = st.columns(2)
@@ -1035,7 +1037,7 @@ def write_sample_size():
     else:
         st.write("대상자 수가 입력되지 않았습니다. AI에게 추천을 받으세요.")
 
-    if st.button("대상자 수 및 산출근거 AI에게 추천받기"):
+    if st.button("대상자 수 및 산출근거 AI에게 추천받기✍🏻"):
         research_purpose = load_section_content("1. 연구 목적")
         research_background = load_section_content("2. 연구 배경")
         selection_criteria = load_section_content("3. 선정기준, 제외기준")
@@ -1060,6 +1062,8 @@ def write_sample_size():
         st.rerun()
 
     # AI 응답 표시
+    st.markdown("---")
+    st.markdown("🤖 **AI 응답**")
     content = load_section_content("4. 대상자 수 및 산출근거")
     if content:
         st.markdown("### AI가 추천한 대상자 수 및 산출근거:")
@@ -1109,7 +1113,7 @@ def write_sample_size():
     
     # 편집 기능
     edited_content = st.text_area(
-        "생성된 내용을 편집하세요:",
+        "생성된 내용을 편집하세요. 편집 후 저장 버튼을 누르세요:",
         content,
         height=300,
         key="edit_content_4"
@@ -1144,6 +1148,8 @@ def write_data_analysis():
         st.session_state["5. 자료분석과 통계적 방법_history"] = []
 
     # 사용자 입력 받기
+    st.markdown("---")
+    st.markdown("👤 **사용자 입력**")
     label_text = (
     "자료분석과 통계적 방법에 대해 AI에게 알려줄 추가 정보나 고려사항이 있다면 입력해주세요.\n\n"
     "없다면 빈칸으로 두어도 됩니다.\n\n"
@@ -1155,7 +1161,7 @@ def write_data_analysis():
         height=150
     )
   
-    if st.button("자료분석 및 통계방법 AI에게 추천받기"):
+    if st.button("자료분석 및 통계방법 AI에게 추천받기✍🏻"):
         research_purpose = load_section_content("1. 연구 목적")
         research_background = load_section_content("2. 연구 배경")
         selection_criteria = load_section_content("3. 선정기준, 제외기준")
@@ -1180,6 +1186,8 @@ def write_data_analysis():
         st.rerun()
 
     # AI 응답 표시
+    st.markdown("---")
+    st.markdown("🤖 **AI 응답**")
     content = load_section_content("5. 자료분석과 통계적 방법")
     if content:
         st.markdown("### AI가 추천한 자료분석과 통계적 방법 (1000자 내외):")
@@ -1233,7 +1241,7 @@ def write_data_analysis():
     
     # 편집 기능
     edited_content = st.text_area(
-        "생성된 내용을 편집하세요:",
+        "생성된 내용을 편집하세요. 편집 후 저장 버튼을 누르세요:",
         content,
         height=300,
         key="edit_content_5"
@@ -1281,7 +1289,7 @@ def write_research_method():
     if "6. 연구방법_history" not in st.session_state:
         st.session_state["6. 연구방법_history"] = []
 
-    if st.button("연구방법 정리 요청하기"):
+    if st.button("연구방법 정리 요청하기✍🏻"):
         research_purpose = load_section_content("1. 연구 목적")
         research_background = load_section_content("2. 연구 배경")
         selection_criteria = load_section_content("3. 선정기준, 제외기준")
@@ -1421,7 +1429,8 @@ def write_research_title():
     """)
 
     # 사용자 입력 받기
-    
+    st.markdown("---")
+    st.markdown("👤 **사용자 입력**")
     label_text = (
     "연구 과제명에 대해 AI에게 알려줄 추가 정보나 고려사항이 있다면 입력해주세요.\n\n"
     "없다면 빈칸으로 두어도 됩니다.\n\n"
@@ -1434,7 +1443,7 @@ def write_research_title():
     )
 
     # "연구 과제명 추천받기" 버튼을 여기로 이동
-    if st.button("연구 과제명 AI에게 추천받기"):
+    if st.button("연구 과제명 AI에게 추천받기✍🏻"):
         research_purpose = load_section_content("1. 연구 목적")
         research_background = load_section_content("2. 연구 배경")
         selection_criteria = load_section_content("3. 선정기준, 제외기준")
@@ -1466,8 +1475,10 @@ def write_research_title():
     content = load_section_content("7. 연구 과제명")
 
     # 편집 기능 (항상 표시)
+    st.markdown("---")
+    st.markdown("🤖 **AI 응답**")
     edited_content = st.text_area(
-        "연구 과제명을 직접 입력하거나 편집하세요:",
+        "연구 과제명을 직접 입력하거나, AI가 생성한 내용을 편집하세요. 편집 후 저장 버튼을 누르세요:",
         content if content else "",
         height=150,
         key="edit_content_7"

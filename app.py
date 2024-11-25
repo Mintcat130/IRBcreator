@@ -1627,34 +1627,14 @@ def chat_interface():
     if 'view_mode' not in st.session_state:
         st.session_state.view_mode = 'edit'
 
-    # API 키 입력 부분의 코드를 다음과 같이 수정
     if 'api_key' not in st.session_state or not st.session_state.api_key:
         api_key = st.text_input("Anthropic API 키를 입력하세요:", type="password")
-        
+    
         # CSS로 버튼 스타일 지정
         st.markdown("""
             <style>
-            div.stButton > button:first-child {
-                background-color: #4CAF50;
-                color: white;
-                padding: 15px 32px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 20px;
-                margin: 4px 2px;
-                cursor: pointer;
-                border-radius: 12px;
-                border: none;
-                width: 100%;
-                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-            }
-            div.stButton > button:hover {
-                background-color: #45a049;
-                border: none;
-            }
-            /* API 키 확인 버튼은 기본 스타일 유지 */
-            div.stButton:first-child > button:first-child {
+            /* 기본 버튼 스타일 */
+            .stButton > button {
                 background-color: inherit;
                 color: inherit;
                 font-size: inherit;
@@ -1662,22 +1642,48 @@ def chat_interface():
                 width: auto;
                 box-shadow: none;
             }
-            div.stButton:first-child > button:hover {
-                background-color: inherit;
-                color: inherit;
+            
+            /* 연구계획서 작성하기 버튼 스타일 */
+            div[data-testid="column"]:has(button:contains("연구계획서 작성하기")) .stButton > button {
+                background-color: #4CAF50 !important;
+                color: white !important;
+                padding: 20px 40px !important;
+                text-align: center !important;
+                font-size: 24px !important;
+                margin: 10px 0px !important;
+                cursor: pointer !important;
+                border-radius: 12px !important;
+                border: none !important;
+                width: 100% !important;
+                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2) !important;
+                transition: all 0.3s ease !important;
+            }
+            
+            /* 호버 효과 */
+            div[data-testid="column"]:has(button:contains("연구계획서 작성하기")) .stButton > button:hover {
+                background-color: #45a049 !important;
+                box-shadow: 0 6px 12px 0 rgba(0,0,0,0.3) !important;
+                transform: translateY(-2px) !important;
             }
             </style>
         """, unsafe_allow_html=True)
         
-        if st.button("API 키 확인"):
-            client = initialize_anthropic_client(api_key)
-            if client:
-                st.success("유효한 API 키입니다. 연구계획서 작성하기 버튼을 눌러 시작하세요.")
-                st.session_state.temp_api_key = api_key
-            else:
-                st.error("API 키 설정에 실패했습니다. 키를 다시 확인해 주세요.")
+        col1, col2 = st.columns([1, 2])
+        
+        with col1:
+            if st.button("API 키 확인"):
+                client = initialize_anthropic_client(api_key)
+                if client:
+                    st.success("유효한 API 키입니다. 연구계획서 작성하기 버튼을 눌러 시작하세요.")
+                    st.session_state.temp_api_key = api_key
+                else:
+                    st.error("API 키 설정에 실패했습니다. 키를 다시 확인해 주세요.")
 
-        # Streamlit 기본 버튼 사용 (CSS로 스타일링됨)
+        # 빈 컬럼으로 간격 추가
+        st.write("")
+        st.write("")
+        
+        # 연구계획서 작성하기 버튼
         if st.button("연구계획서 작성하기 ✏️"):
             if 'temp_api_key' in st.session_state:
                 st.session_state.api_key = st.session_state.temp_api_key

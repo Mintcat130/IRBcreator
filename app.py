@@ -1627,7 +1627,7 @@ def chat_interface():
     if 'view_mode' not in st.session_state:
         st.session_state.view_mode = 'edit'
 
-    # 버튼 스타일링
+    # 버튼
     if 'api_key' not in st.session_state or not st.session_state.api_key:
         api_key = st.text_input("Anthropic API 키를 입력하세요:", type="password")
         
@@ -1640,34 +1640,18 @@ def chat_interface():
             else:
                 st.error("API 키 설정에 실패했습니다. 키를 다시 확인해 주세요.")
 
-        st.write("")
-        st.write("")
+        st.write("")  # 한 줄의 간격만 유지
         
-        # 큰 버튼용 스타일
-        st.markdown("""
-            <style>
-            div.stButton > button {
-                width: 100%;
-                height: 100px;
-                font-size: 24px;
-                font-weight: bold;
-                background-color: #4CAF50;
-                color: white;
-            }
-            </style>
-        """, unsafe_allow_html=True)
-        
-        # 연구계획서 작성하기 버튼만 별도의 container에 배치
-        with st.container():
-            if st.button("연구계획서 작성하기 ✏️"):
-                if 'temp_api_key' in st.session_state:
-                    st.session_state.api_key = st.session_state.temp_api_key
-                    st.session_state.anthropic_client = initialize_anthropic_client(st.session_state.api_key)
-                    del st.session_state.temp_api_key
-                    st.success("API 키가 설정되었습니다!")
-                    st.rerun()
-                else:
-                    st.warning("먼저 API 키를 입력하고 확인해주세요.")
+        # 연구계획서 작성하기 버튼
+        if st.button("연구계획서 작성하기 ✏️"):
+            if 'temp_api_key' in st.session_state:
+                st.session_state.api_key = st.session_state.temp_api_key
+                st.session_state.anthropic_client = initialize_anthropic_client(st.session_state.api_key)
+                del st.session_state.temp_api_key
+                st.success("API 키가 설정되었습니다!")
+                st.rerun()
+            else:
+                st.warning("먼저 API 키를 입력하고 확인해주세요.")
 
     # API 키가 설정된 후의 메인 인터페이스
     else:

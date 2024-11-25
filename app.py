@@ -1712,7 +1712,7 @@ def render_section_page():
         write_sample_size()
     elif st.session_state.current_section == "5. 자료분석과 통계적 방법":
         write_data_analysis()
-    elif st.session_state.current_section == "6. 연구 방법":
+    elif st.session_state.current_section == "6. 연구방법":
         write_research_method()
 
     # 이전 섹션과 다음 섹션 버튼

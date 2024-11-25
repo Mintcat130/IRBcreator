@@ -1629,9 +1629,10 @@ def chat_interface():
 
     # 버튼 스타일링
     if 'api_key' not in st.session_state or not st.session_state.api_key:
-        api_key = st.text_input("Anthropic API 키를 입력하세요:", type="password")
-        
-        if st.button("API 키 확인"):
+    api_key = st.text_input("Anthropic API 키를 입력하세요:", type="password")
+    
+        # API 키 확인 버튼
+        if st.button("API 키 확인", key="check_api"):
             client = initialize_anthropic_client(api_key)
             if client:
                 st.success("유효한 API 키입니다. 연구계획서 작성하기 버튼을 눌러 시작하세요.")
@@ -1646,13 +1647,31 @@ def chat_interface():
         with st.container():
             st.markdown("""
                 <style>
+                /* 기본 버튼 스타일 유지 */
                 div.stButton > button {
+                    background-color: inherit;
+                    color: inherit;
+                    font-size: inherit;
+                }
+                
+                /* 연구계획서 작성하기 버튼만 스타일 적용 */
+                div.stButton > button[kind="secondary"][data-testid="start_button"] {
                     width: 100%;
                     height: 100px;
                     font-size: 24px;
                     font-weight: bold;
                     background-color: #4CAF50;
                     color: white;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+                    transition: all 0.3s ease;
+                }
+                
+                /* 호버 효과 */
+                div.stButton > button[kind="secondary"][data-testid="start_button"]:hover {
+                    background-color: #45a049;
+                    box-shadow: 0 6px 12px 0 rgba(0,0,0,0.3);
+                    transform: translateY(-2px);
                 }
                 </style>
             """, unsafe_allow_html=True)

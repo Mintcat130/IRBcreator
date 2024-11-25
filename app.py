@@ -503,10 +503,12 @@ def write_research_purpose():
 기존에 작성한 초록이나 논문의 영어 원문이 있다면 붙여 넣어도 됩니다. 
                 
 입력 후 버튼을 누르면 AI 모델이 연구목적에 대한 줄글을 작성 해 줍니다.""")
+    st.markdown("---")
+    st.markdown("👤 **사용자 입력**")
     
-    user_input = st.text_area("연구 주제 및 키워드:", height=150)
+    user_input = st.text_area("연구 주제, 키워드 또는 introduction 원문을 입력하세요:", height=150)
     
-    if st.button("연구 목적 AI 생성"):
+    if st.button("연구 목적 AI 생성 요청✍🏻"):
         if user_input:
             prompt = PREDEFINED_PROMPTS["1. 연구 목적"].format(user_input=user_input)
             ai_response = generate_ai_response(prompt)
@@ -523,6 +525,8 @@ def write_research_purpose():
             st.warning("연구 주제나 키워드를 입력해주세요.")
 
     # AI 응답 표시
+    st.markdown("---")
+    st.markdown("🤖 **AI 응답**")
     content = load_section_content("1. 연구 목적")
     if content:
         st.markdown("### AI가 생성한 연구 목적:")
@@ -580,7 +584,7 @@ def write_research_purpose():
 
     # 편집 기능
     edited_content = st.text_area(
-        "생성된 내용을 편집하거나 내용을 직접 입력하세요:",
+        "생성된 내용을 편집하세요. 편집 후 저장 버튼을 누르세요:",
         content,
         height=200,
         key="edit_content_1"
@@ -615,6 +619,9 @@ def write_research_background():
         st.session_state["2. 연구 배경_history"] = []
 
     # 사용자 입력 받기
+    st.markdown("---")
+    st.markdown("👤 **사용자 입력**")
+
     label_text = (
     "연구 배경과 선행 연구들에 대해 AI에게 알려줄 추가 정보나 고려사항이 있다면 입력해주세요.\n\n"
     "없다면 빈칸으로 두어도 됩니다.\n\n"
@@ -626,6 +633,9 @@ def write_research_background():
         height=150
     )
     
+    st.markdown("---")
+    st.markdown("📄**연구 배경에 사용할 참조논문 검색**")
+
      # 참조논문 검색 부분을 expander로 감싸기
     with st.expander("참조논문 검색하기", expanded=False):
         # 키워드 입력
@@ -665,7 +675,8 @@ def write_research_background():
     """)
     
     # PDF 파일 업로드 
-    
+    st.markdown("---")
+    st.markdown("📁 **참고논문 PDF 업로드**")
     
     uploaded_files = st.file_uploader("연구 배경 작성에 참고할 선행연구 논문 PDF 파일을 업로드하세요. 중요한 논문 위주로 4개 이하 업로드를 추천합니다. \n**주의:** 검색 결과의 논문 내용은 자동으로 반영되지 않습니다. \n검색된 논문들을 사용하시려면 각 웹페이지에서 PDF 파일을 다운 받은 후 여기에 업로드 하세요.", type="pdf", accept_multiple_files=True)
     
@@ -682,7 +693,7 @@ def write_research_background():
 
 
     # 연구 배경 생성 버튼
-    if st.button("연구배경 AI 생성 요청하기"):
+    if st.button("연구배경 AI 생성 요청✍🏻"):
         if 'pdf_texts' in st.session_state and st.session_state['pdf_texts']:
             research_purpose = load_section_content("1. 연구 목적")
             
@@ -747,6 +758,8 @@ def write_research_background():
             st.warning("PDF를 업로드한 후 다시 시도해주세요.")
 
     # AI 응답 표시
+    st.markdown("---")
+    st.markdown("🤖 **AI 응답**")
     content = load_section_content("2. 연구 배경")
     if content:
         st.markdown("### AI가 생성한 연구 배경 (1000자 내외):")
@@ -808,7 +821,7 @@ def write_research_background():
 
     # 편집 기능
     edited_content = st.text_area(
-        "생성된 내용을 편집하세요 :",
+        "생성된 내용을 편집하세요. 편집 후 저장 버튼을 누르세요. :",
         content,
         height=300,
         key="edit_content_2"
@@ -884,6 +897,8 @@ def write_selection_criteria():
         st.session_state["3. 선정기준, 제외기준_history"] = []
 
     # 사용자 입력 받기
+    st.markdown("---")
+    st.markdown("👤 **사용자 입력**")
     label_text = (
     "선정기준과 제외기준에 대해 AI에게 알려줄 추가 정보나 고려사항이 있다면 입력해주세요.\n\n"
     "없다면 빈칸으로 두어도 됩니다.\n\n"
@@ -895,7 +910,7 @@ def write_selection_criteria():
         height=150
     )
    
-    if st.button("선정, 제외기준 AI에게 추천받기"):
+    if st.button("선정, 제외기준 AI에게 추천받기✍🏻"):
         research_purpose = load_section_content("1. 연구 목적")
         research_background = load_section_content("2. 연구 배경")
         
@@ -916,6 +931,8 @@ def write_selection_criteria():
         st.rerun()
 
     # AI 응답 표시
+    st.markdown("---")
+    st.markdown("🤖 **AI 응답**")
     content = load_section_content("3. 선정기준, 제외기준")
     if content:
         st.markdown("### AI가 추천한 선정, 제외기준:")
@@ -965,7 +982,7 @@ def write_selection_criteria():
     
     # 편집 기능
     edited_content = st.text_area(
-        "생성된 내용을 편집하세요:",
+        "생성된 내용을 편집하세요. 편집 후 저장 버튼을 누르세요:",
         content,
         height=200,
         key="edit_content_3"

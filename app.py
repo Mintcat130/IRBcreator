@@ -498,7 +498,11 @@ def write_research_purpose():
     if "1. 연구 목적_history" not in st.session_state:
         st.session_state["1. 연구 목적_history"] = []
 
-    st.markdown("어떤 연구를 계획중인지, 연구에 대한 내용이나 키워드를 형식에 상관없이 자유롭게 입력해주세요.\n 기존에 작성한 초록이나 논문의 영어 원문이 있다면 붙여 넣어도 됩니다. \n입력 후 버튼을 누르면 AI 모델이 연구목적에 대한 줄글을 작성 해 줍니다.")
+    st.markdown("""어떤 연구를 계획중인지, 연구에 대한 내용이나 키워드를 형식에 상관없이 자유롭게 입력해주세요.
+                
+기존에 작성한 초록이나 논문의 영어 원문이 있다면 붙여 넣어도 됩니다. 
+                
+입력 후 버튼을 누르면 AI 모델이 연구목적에 대한 줄글을 작성 해 줍니다.""")
     
     user_input = st.text_area("연구 주제 및 키워드:", height=150)
     
@@ -611,8 +615,17 @@ def write_research_background():
         st.session_state["2. 연구 배경_history"] = []
 
     # 사용자 입력 받기
-    user_input = st.text_area("연구 배경에 대해 작성하고 싶은 내용이나 AI 모델이 참고 해야할 내용이 있다면 입력해주세요. 없으면 빈칸으로 두고 진행해도 됩니다. \n빈칸으로 둘 경우 `2.연구목적` 섹션의 내용과 업로드된 PDF를 기준으로 내용을 작성합니다.:", height=150)
+    label_text = (
+    "연구 배경과 선행 연구들에 대해 AI에게 알려줄 추가 정보나 고려사항이 있다면 입력해주세요.\n\n"
+    "없다면 빈칸으로 두어도 됩니다.\n\n"
+    "빈칸으로 둘 경우 `2.연구목적` 섹션의 내용과 업로드된 PDF를 기준으로 내용을 작성합니다.:"
+    )
 
+    user_input = st.text_area(
+        label_text,
+        height=150
+    )
+    
      # 참조논문 검색 부분을 expander로 감싸기
     with st.expander("참조논문 검색하기", expanded=False):
         # 키워드 입력
@@ -652,6 +665,8 @@ def write_research_background():
     """)
     
     # PDF 파일 업로드 
+    
+    
     uploaded_files = st.file_uploader("연구 배경 작성에 참고할 선행연구 논문 PDF 파일을 업로드하세요. 중요한 논문 위주로 4개 이하 업로드를 추천합니다. \n**주의:** 검색 결과의 논문 내용은 자동으로 반영되지 않습니다. \n검색된 논문들을 사용하시려면 각 웹페이지에서 PDF 파일을 다운 받은 후 여기에 업로드 하세요.", type="pdf", accept_multiple_files=True)
     
     if uploaded_files:
@@ -869,8 +884,17 @@ def write_selection_criteria():
         st.session_state["3. 선정기준, 제외기준_history"] = []
 
     # 사용자 입력 받기
-    user_input = st.text_area("선정기준과 제외기준에 대해 AI에게 알려 줄 추가 정보나 고려사항이 있다면 입력해주세요.\n 특별히 없다면 빈칸으로 두어도 됩니다. 빈칸이라면 이전 섹션들의 내용을 기반으로 선정기준, 제외기준을 제안합니다:", height=150)
+    label_text = (
+    "선정기준과 제외기준에 대해 AI에게 알려줄 추가 정보나 고려사항이 있다면 입력해주세요.\n\n"
+    "없다면 빈칸으로 두어도 됩니다.\n\n"
+    "빈칸 이라면 자동으로 이전 섹션들의 내용을 기반으로 AI가 제안합니다:"
+    )
 
+    user_input = st.text_area(
+        label_text,
+        height=150
+    )
+   
     if st.button("선정, 제외기준 AI에게 추천받기"):
         research_purpose = load_section_content("1. 연구 목적")
         research_background = load_section_content("2. 연구 배경")
@@ -976,7 +1000,9 @@ def write_sample_size():
         st.session_state["4. 대상자 수 및 산출근거_history"] = []
 
     # 안내 텍스트 추가
-    st.write("이미 정해진 대상자 수가 있다면 입력해주세요. \n없다면 비워두고 AI 추천받기 버튼을 눌러 추천받으세요.")
+    st.write("""이미 정해진 대상자 수가 있다면 입력해주세요. 
+             
+없다면 비워두고 AI 추천받기 버튼을 눌러 추천받으세요.""")
 
         # 사용자 입력 대상자 수
     col1, col2 = st.columns(2)
@@ -1101,8 +1127,17 @@ def write_data_analysis():
         st.session_state["5. 자료분석과 통계적 방법_history"] = []
 
     # 사용자 입력 받기
-    user_input = st.text_area("자료분석과 통계적 방법에 대해 AI에게 알려줄 추가 정보나 고려사항이 있다면 입력해주세요. 특별히 없다면 빈칸으로 두어도 됩니다. \n빈칸이라면 이전 섹션들의 내용을 기반으로 선정기준, 제외기준을 제안합니다:", height=150)
+    label_text = (
+    "자료분석과 통계적 방법에 대해 AI에게 알려줄 추가 정보나 고려사항이 있다면 입력해주세요.\n\n"
+    "없다면 빈칸으로 두어도 됩니다.\n\n"
+    "빈칸 이라면 자동으로 이전 섹션들의 내용을 기반으로 AI가 제안합니다:"
+    )
 
+    user_input = st.text_area(
+        label_text,
+        height=150
+    )
+  
     if st.button("자료분석 및 통계방법 AI에게 추천받기"):
         research_purpose = load_section_content("1. 연구 목적")
         research_background = load_section_content("2. 연구 배경")
@@ -1362,7 +1397,9 @@ def write_research_title():
     # 안내 글 추가
     st.markdown("""
     연구 과제명을 직접 입력하거나, AI에게 추천받을 수 있습니다. 
+    
     AI 추천은 기본적으로 3쌍의 영문/한글 제목을 제시합니다.
+    
     AI 추천을 받으려면 '연구 과제명 추천받기' 버튼을 클릭하세요.
     """)
 
@@ -1371,7 +1408,7 @@ def write_research_title():
     label_text = (
     "연구 과제명에 대해 AI에게 알려줄 추가 정보나 고려사항이 있다면 입력해주세요.\n\n"
     "없다면 빈칸으로 두어도 됩니다.\n\n"
-    "빈칸이라면 자동으로 이전 섹션들의 내용을 종합하여 알맞은 제목을 추천합니다.:"
+    "빈칸 이라면 자동으로 이전 섹션들의 내용을 종합하여 알맞은 제목을 추천합니다.:"
     )
 
     user_input = st.text_area(

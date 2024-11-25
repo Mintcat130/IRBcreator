@@ -1632,44 +1632,42 @@ def chat_interface():
         api_key = st.text_input("Anthropic API 키를 입력하세요:", type="password")
         
         # API 키 확인 버튼
-        col1, col2 = st.columns([1, 2])  # 컬럼을 나누어 버튼 크기 조절
-        with col1:
-            if st.button("API 키 확인", key="check_api"):
-                client = initialize_anthropic_client(api_key)
-                if client:
-                    st.success("유효한 API 키입니다. 연구계획서 작성하기 버튼을 눌러 시작하세요.")
-                    st.session_state.temp_api_key = api_key
-                else:
-                    st.error("API 키 설정에 실패했습니다. 키를 다시 확인해 주세요.")
+        if st.button("API 키 확인", key="check_api"):
+            client = initialize_anthropic_client(api_key)
+            if client:
+                st.success("유효한 API 키입니다. 연구계획서 작성하기 버튼을 눌러 시작하세요.")
+                st.session_state.temp_api_key = api_key
+            else:
+                st.error("API 키 설정에 실패했습니다. 키를 다시 확인해 주세요.")
 
         st.write("")
         st.write("")
         
-        # 메인 버튼 스타일
+        # 스타일 정의 - 특정 key를 가진 버튼에만 스타일 적용
         st.markdown("""
             <style>
-            div.stButton > button {
+            div[data-testid="stButton"] > button[kind="secondary"] {
+                width: auto;
+                height: auto;
+                background-color: inherit;
+                color: inherit;
+                font-size: inherit;
+            }
+            div[data-testid="stButton"] > button[data-testid="start_writing"] {
                 width: 100%;
                 height: 100px;
                 font-size: 24px;
                 font-weight: bold;
                 background-color: #4CAF50;
                 color: white;
-            }
-            /* API 키 확인 버튼 스타일 복원 */
-            button[data-testid="check_api"] {
-                width: auto !important;
-                height: auto !important;
-                font-size: inherit !important;
-                font-weight: normal !important;
-                background-color: transparent !important;
-                color: inherit !important;
+                border-radius: 12px;
+                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
             }
             </style>
         """, unsafe_allow_html=True)
         
         # 연구계획서 작성하기 버튼
-        if st.button("연구계획서 작성하기 ✏️", key="start_button"):
+        if st.button("연구계획서 작성하기 ✏️", key="start_writing"):  # 특정 key 사용
             if 'temp_api_key' in st.session_state:
                 st.session_state.api_key = st.session_state.temp_api_key
                 st.session_state.anthropic_client = initialize_anthropic_client(st.session_state.api_key)

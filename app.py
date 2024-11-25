@@ -70,7 +70,7 @@ SYSTEM_PROMPT = """
 
 # PREDEFINED_PROMPTS 수정
 PREDEFINED_PROMPTS = {
-    "2. 연구 목적": """
+    "1. 연구 목적": """
     사용자가 제공한 연구 주제와 키워드를 바탕으로, 연구 목적과 가설을 500자 이내의 줄글로 작성하세요. 어미는 반말 문어체로 합니다. (예: ~하였다. ~있다. ~있었다)
     다음 사항을 포함해야 합니다:
     1. 연구의 주요 목적
@@ -85,7 +85,7 @@ PREDEFINED_PROMPTS = {
     위의 내용을 바탕으로 연구 목적과 가설을 구체화하여 작성해주세요. 특히, 연구 결과가 환자들에게 제공할 수 있는 실질적인 이익을 명확히 기술하여 IRB(기관 윤리위원회) 승인에 도움이 되도록 해주세요.
     """,
     
-    "3. 연구 배경": """
+    "2. 연구 배경": """
     제공된 정보를 바탕으로 연구의 배경을 1000자 이내로 설명해주세요. 
     중요: 모든 문장은 반드시 반말 문어체로 끝나야 합니다. 예시: ~했다, ~였다, ~알려져 있다, ~보고되었다.
     
@@ -104,7 +104,6 @@ PREDEFINED_PROMPTS = {
     - "국내"는 한국(Korea)을 의미한다.
     - "국외"는 한국(Korea)이 외 모든 나라를 의미한다.
     - 제공된 PDF 파일 내용 중 한국 소속 저자의 연구가 있다면, 이를 바탕으로 국내 연구 현황을 설명한다.
-    - 만약 한국 소속 저자의 연구가 없다면, 국내에서는 아직 이 주제에 대한 연구가 충분히 이루어지지 않았다는 점을 언급하고 본 연구의 필요성을 강조한다.
     
     세 번째 문단: 연구 배경과 연구의 정당성에 대한 설명
     - 현재 연구가 필요한 이유를 설명한다.
@@ -145,8 +144,8 @@ PREDEFINED_PROMPTS = {
     위 지침을 엄격히 따라 연구 배경을 작성해주세요. 두 번째 문단에서 제공된 PDF 내용에 없는 정보는 절대 포함하지 마세요.
     """,
 
-    "4. 선정기준, 제외기준": """
-    2, 3번 섹션의 결과물과 참고한 논문들을 토대로, 이 연구에 적당한 대상자 그룹(선정기준)과 연구에서 제외해야 할 그룹(제외기준)을 추천해주세요. 다음 지침을 따라주세요:
+    "3. 선정기준, 제외기준": """
+    1, 2번 섹션의 결과물과 참고한 논문들을 토대로, 이 연구에 적당한 대상자 그룹(선정기준)과 연구에서 제외해야 할 그룹(제외기준)을 추천해주세요. 다음 지침을 따라주세요:
     1. 구체적인 년도나 시기는 적지 않습니다. (잘못된 예시: 2009년 국가 건강검진을 받은 4,234,415명)
     2. 선정기준 예시: 40세에서 60세 사이에 해당하며, 이전 치매에 진단받은 과거력이 없는 수검자
     3. 제외기준 예시: 40세 이하 혹은 60세 이상, 검진 당시 치매 진단 과거력 있는 수검자, 누락된 변수 정보가 있는 수검자
@@ -163,7 +162,7 @@ PREDEFINED_PROMPTS = {
 
     위의 내용을 바탕으로 적절한 선정기준, 제외기준을 작성해주세요.
     """,
-    "5. 대상자 수 및 산출근거": """
+    "4. 대상자 수 및 산출근거": """
     이전 섹션의 내용과 업로드된 논문들을 참고하여 다음 형식에 맞춰 대상자 수 및 산출근거를 작성해주세요. 어미는 반말 문어체로 합니다. (예: ~하였다. ~있다. ~있었다):
 
     다음 형식으로 대상자 수 및 산출근거를 작성해주세요:
@@ -202,7 +201,7 @@ PREDEFINED_PROMPTS = {
     위의 내용을 바탕으로 대상자 수 및 산출근거를 작성해주세요. 사용자 입력 대상자 수가 있다면 이를 참고하되, 직접적으로 언급하지 말고 연구 계획의 일부로 자연스럽게 설명해주세요. 입력된 대상자 수가 없다면, 연구 목적과 배경을 고려하여 적절한 대상자 수를 제안하고 그 근거를 설명해주세요.
     """,
     
-        "6. 자료분석과 통계적 방법": """
+    "5. 자료분석과 통계적 방법": """
     이전 섹션의 내용을 바탕으로 자료분석과 통계적 방법을 1000자 이내로 작성해주세요. 어미는 '-할 것이다', '-할 예정이다'와 같은 미래형 문어체로 작성합니다. 다음 사항을 포함해야 합니다:
 
     1. 수집해야 하는 수치나 값, 변수들 제시
@@ -236,8 +235,9 @@ PREDEFINED_PROMPTS = {
     위의 내용을 바탕으로 자료분석과 통계적 방법을 구체적으로 작성해주세요. 각 항목을 명확히 구분하여 작성하되, 전체적으로 일관성 있는 내용이 되도록 해주세요.
     주의: 모든 설명은 미래형으로 작성해야 합니다. 예를 들어, "~~방법을 사용할 것이다", "~~를 분석할 예정이다" 등의 형식으로 작성하세요.
     """,
-        "7. 연구방법": """
-        2번부터 6번까지의 섹션 내용을 바탕으로 전체 연구방법을 500자 이내로 요약해주세요. 어미는 미래형 문어체로 통일합니다. (예: ~할 것이다. ~할 예정이다. ~할 계획이다) 다음 사항을 포함해야 합니다:
+        
+    "6. 연구방법": """
+        1번부터 5번까지의 섹션 내용을 바탕으로 전체 연구방법을 500자 이내로 요약해주세요. 어미는 미래형 문어체로 통일합니다. (예: ~할 것이다. ~할 예정이다. ~할 계획이다) 다음 사항을 포함해야 합니다:
         
         1. 연구 목적의 핵심
         2. 연구 대상자 선정 및 제외 기준의 요점
@@ -264,7 +264,8 @@ PREDEFINED_PROMPTS = {
         
         위의 내용을 바탕으로 전체 연구방법을 미래형으로 요약해주세요. 모든 문장이 미래형으로 작성되었는지 다시 한 번 확인하세요.
         """,
-    "1. 연구 과제명": """
+        
+    "7. 연구 과제명": """
 지금까지 작성된 연구계획서의 모든 내용을 바탕으로 연구 과제명을 추천해주세요. 다음 지침을 따라주세요:
 
 1. 총 3가지의 제목 옵션을 제시해주세요.
@@ -304,13 +305,13 @@ PREDEFINED_PROMPTS = {
 
 # 연구 섹션 순서 정의
 RESEARCH_SECTIONS = [
-    "2. 연구 목적",
-    "3. 연구 배경",
-    "4. 선정기준, 제외기준",
-    "5. 대상자 수 및 산출근거",
-    "6. 자료분석과 통계적 방법",
-    "7. 연구방법",
-    "1. 연구 과제명", 
+    "1. 연구 목적",
+    "2. 연구 배경",
+    "3. 선정기준, 제외기준",
+    "4. 대상자 수 및 산출근거",
+    "5. 자료분석과 통계적 방법",
+    "6. 연구방법",
+    "7. 연구 과제명", 
     # 다른 섹션들은 나중에 추가할 예정입니다.
 ]
 
@@ -320,7 +321,7 @@ def initialize_anthropic_client(api_key):
         client = anthropic.Client(api_key=api_key)
         # 간단한 API 호출로 키 유효성 검사
         client.messages.create(
-            model="claude-3-5-sonnet-20240620",
+            model="claude-3-5-sonnet-20241022",
             max_tokens=2000,
             messages=[{"role": "user", "content": "Hello"}]
         )
@@ -343,7 +344,7 @@ def generate_ai_response(prompt):
             system_prompt = f"{SYSTEM_PROMPT}\n\n추가 지시사항: 답변을 작성할 때 번호나 불렛 포인트를 사용하지 말고, 서술형으로 작성해주세요. 문단을 나누어 가독성 있게 작성하되, 전체적으로 하나의 연결된 글이 되도록 해주세요."
             
             response = st.session_state.anthropic_client.messages.create(
-                model="claude-3-5-sonnet-20240620",
+                model="claude-3-5-sonnet-20241022",
                 max_tokens=2000,
                 system=system_prompt,
                 messages=[
@@ -489,36 +490,36 @@ def extract_sections(text):
     
     return sections
 
-# 2. 연구목적 작성 함수
+# 1. 연구목적 작성 함수
 def write_research_purpose():
-    st.markdown("## 2. 연구 목적")
+    st.markdown("## 1. 연구 목적")
     
     # 히스토리 초기화
-    if "2. 연구 목적_history" not in st.session_state:
-        st.session_state["2. 연구 목적_history"] = []
+    if "1. 연구 목적_history" not in st.session_state:
+        st.session_state["1. 연구 목적_history"] = []
 
-    st.markdown("어떤 연구를 계획중인지, 연구에 대한 내용이나 키워드를 형식에 상관없이 자유롭게 입력해주세요. 기존에 작성한 초록이 있다면 입력해도 좋습니다. 입력 후 버튼을 누르면 AI 모델이 연구목적에 대한 줄글을 작성 해 줍니다.(500자 내외)")
+    st.markdown("어떤 연구를 계획중인지, 연구에 대한 내용이나 키워드를 형식에 상관없이 자유롭게 입력해주세요. 기존에 작성한 초록이나 논문의 영어 원문이 있다면 붙여 넣어도 됩니다. 입력 후 버튼을 누르면 AI 모델이 연구목적에 대한 줄글을 작성 해 줍니다.")
     
     user_input = st.text_area("연구 주제 및 키워드:", height=150)
     
     if st.button("연구 목적 AI 생성"):
         if user_input:
-            prompt = PREDEFINED_PROMPTS["2. 연구 목적"].format(user_input=user_input)
+            prompt = PREDEFINED_PROMPTS["1. 연구 목적"].format(user_input=user_input)
             ai_response = generate_ai_response(prompt)
             
             # 현재 내용을 히스토리에 추가
-            current_content = load_section_content("2. 연구 목적")
+            current_content = load_section_content("1. 연구 목적")
             if current_content:
-                st.session_state["2. 연구 목적_history"].append(current_content)
+                st.session_state["1. 연구 목적_history"].append(current_content)
             
-            save_section_content("2. 연구 목적", ai_response)
+            save_section_content("1. 연구 목적", ai_response)
             st.session_state.show_modification_request = False
             st.rerun()
         else:
             st.warning("연구 주제나 키워드를 입력해주세요.")
 
     # AI 응답 표시
-    content = load_section_content("2. 연구 목적")
+    content = load_section_content("1. 연구 목적")
     if content:
         st.markdown("### AI가 생성한 연구 목적:")
         st.markdown(content)
@@ -538,13 +539,13 @@ def write_research_purpose():
             modification_request = st.text_area(
                 "수정을 원하는 부분과 수정 방향을 설명해주세요:",
                 height=150,
-                key="modification_request_2"
+                key="modification_request_1"
             )
-            if st.button("수정 요청 제출", key="submit_modification_2"):
+            if st.button("수정 요청 제출", key="submit_modification_1"):
                 if modification_request:
-                    current_content = load_section_content("2. 연구 목적")
+                    current_content = load_section_content("1. 연구 목적")
                     # 현재 내용을 히스토리에 추가
-                    st.session_state["2. 연구 목적_history"].append(current_content)
+                    st.session_state["1. 연구 목적_history"].append(current_content)
                     
                     prompt = f"""
                     현재 연구 목적:
@@ -567,7 +568,7 @@ def write_research_purpose():
                     """
                     modified_response = generate_ai_response(prompt)
                     
-                    save_section_content("2. 연구 목적", modified_response)
+                    save_section_content("1. 연구 목적", modified_response)
                     st.session_state.show_modification_request = False
                     st.rerun()
                 else:
@@ -578,36 +579,36 @@ def write_research_purpose():
         "생성된 내용을 편집하거나 내용을 직접 입력하세요:",
         content,
         height=200,
-        key="edit_content_2"
+        key="edit_content_1"
     )
     st.warning("다음 섹션으로 넘어가기 전에 편집내용 저장 버튼을 누르세요.")
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("편집 내용 저장", key="save_edit_2"):
+        if st.button("편집 내용 저장", key="save_edit_1"):
             # 현재 내용을 히스토리에 추가
-            st.session_state["2. 연구 목적_history"].append(content)
-            save_section_content("2. 연구 목적", edited_content)
+            st.session_state["1. 연구 목적_history"].append(content)
+            save_section_content("1. 연구 목적", edited_content)
             st.success("편집된 내용이 저장되었습니다.")
             st.rerun()
     with col2:
-        if st.button("실행 취소", key="undo_edit_2"):
-            if st.session_state["2. 연구 목적_history"]:
+        if st.button("실행 취소", key="undo_edit_1"):
+            if st.session_state["1. 연구 목적_history"]:
                 # 히스토리에서 마지막 항목을 가져와 현재 내용으로 설정
-                previous_content = st.session_state["2. 연구 목적_history"].pop()
-                save_section_content("2. 연구 목적", previous_content)
+                previous_content = st.session_state["1. 연구 목적_history"].pop()
+                save_section_content("1. 연구 목적", previous_content)
                 st.success("이전 버전으로 되돌렸습니다.")
                 st.rerun()
             else:
                 st.warning("더 이상 되돌릴 수 있는 버전이 없습니다.")
 
 
-# 3. 연구 배경 작성 함수
+# 2. 연구 배경 작성 함수
 def write_research_background():
-    st.markdown("## 3. 연구 배경")
+    st.markdown("## 2. 연구 배경")
 
     # 히스토리 초기화
-    if "3. 연구 배경_history" not in st.session_state:
-        st.session_state["3. 연구 배경_history"] = []
+    if "2. 연구 배경_history" not in st.session_state:
+        st.session_state["2. 연구 배경_history"] = []
 
     # 사용자 입력 받기
     user_input = st.text_area("연구 배경에 대해 작성하고 싶은 내용이나 AI 모델이 참고 해야할 내용이 있다면 입력해주세요. 없으면 빈칸으로 두고 진행해도 됩니다. 빈칸으로 둘 경우 `2.연구목적` 섹션의 내용과 업로드된 PDF를 기준으로 내용을 작성합니다.:", height=150)
@@ -651,7 +652,7 @@ def write_research_background():
     """)
     
     # PDF 파일 업로드 
-    uploaded_files = st.file_uploader("연구 배경 작성에 참고할 선행연구 논문 PDF 파일을 업로드하세요. **주의:** 검색 결과의 논문 내용은 자동으로 반영되지 않습니다. 검색된 논문들을 사용하시려면 각 웹페이지에서 PDF 파일을 다운 받은 후 여기에 업로드 하세요.", type="pdf", accept_multiple_files=True)
+    uploaded_files = st.file_uploader("연구 배경 작성에 참고할 선행연구 논문 PDF 파일을 업로드하세요. 중요한 논문 위주로 4개 이하 업로드를 추천합니다. **주의:** 검색 결과의 논문 내용은 자동으로 반영되지 않습니다. 검색된 논문들을 사용하시려면 각 웹페이지에서 PDF 파일을 다운 받은 후 여기에 업로드 하세요.", type="pdf", accept_multiple_files=True)
     
     if uploaded_files:
         st.session_state.pdf_texts = []
@@ -668,7 +669,7 @@ def write_research_background():
     # 연구 배경 생성 버튼
     if st.button("연구배경 AI 생성 요청하기"):
         if 'pdf_texts' in st.session_state and st.session_state['pdf_texts']:
-            research_purpose = load_section_content("2. 연구 목적")
+            research_purpose = load_section_content("1. 연구 목적")
             
             pdf_contents = []
             korean_authors = False
@@ -696,7 +697,7 @@ def write_research_background():
             
             pdf_content_json = json.dumps(pdf_contents)
             
-            prompt = PREDEFINED_PROMPTS["3. 연구 배경"].format(
+            prompt = PREDEFINED_PROMPTS["2. 연구 배경"].format(
                 user_input=user_input,
                 keywords=keywords,
                 research_purpose=research_purpose,
@@ -717,21 +718,21 @@ def write_research_background():
             # AI 응답 검증 및 수정
             verified_response = verify_and_correct_references(ai_response, st.session_state.pdf_metadata)
             
-            save_section_content("3. 연구 배경", verified_response)
+            save_section_content("2. 연구 배경", verified_response)
             
             # 현재 내용을 히스토리에 추가
-            current_content = load_section_content("3. 연구 배경")
+            current_content = load_section_content("2. 연구 배경")
             if current_content:
-                st.session_state["3. 연구 배경_history"].append(current_content)
+                st.session_state["2. 연구 배경_history"].append(current_content)
             
-            save_section_content("3. 연구 배경", ai_response)
-            st.session_state.show_modification_request_3 = False
+            save_section_content("2. 연구 배경", ai_response)
+            st.session_state.show_modification_request_2 = False
             st.rerun()
         else:
             st.warning("PDF를 업로드한 후 다시 시도해주세요.")
 
     # AI 응답 표시
-    content = load_section_content("3. 연구 배경")
+    content = load_section_content("2. 연구 배경")
     if content:
         st.markdown("### AI가 생성한 연구 배경 (1000자 내외):")
         st.markdown(content)
@@ -743,21 +744,21 @@ def write_research_background():
             st.warning("생성된 내용이 1000자를 초과했습니다. 수정이 필요할 수 있습니다.")
 
         # 수정 요청 기능
-        if st.button("수정 요청하기", key="request_modification_3"):
-            st.session_state.show_modification_request_3 = True
+        if st.button("수정 요청하기", key="request_modification_2"):
+            st.session_state.show_modification_request_2 = True
             st.rerun()
 
-        if st.session_state.get('show_modification_request_3', False):
+        if st.session_state.get('show_modification_request_2', False):
             modification_request = st.text_area(
                 "수정을 원하는 부분과 수정 방향을 설명해주세요:",
                 height=150,
-                key="modification_request_3"
+                key="modification_request_2"
             )
-            if st.button("수정 요청 제출", key="submit_modification_3"):
+            if st.button("수정 요청 제출", key="submit_modification_2"):
                 if modification_request:
-                    current_content = load_section_content("3. 연구 배경")
+                    current_content = load_section_content("2. 연구 배경")
                     # 현재 내용을 히스토리에 추가
-                    st.session_state["3. 연구 배경_history"].append(current_content)
+                    st.session_state["2. 연구 배경_history"].append(current_content)
                     
                     prompt = f"""
                     현재 연구 배경:
@@ -784,34 +785,34 @@ def write_research_background():
                     """
                     modified_response = generate_ai_response(prompt)
                     
-                    save_section_content("3. 연구 배경", modified_response)
-                    st.session_state.show_modification_request_3 = False
+                    save_section_content("2. 연구 배경", modified_response)
+                    st.session_state.show_modification_request_2 = False
                     st.rerun()
                 else:
                     st.warning("수정 요청 내용을 입력해주세요.")
 
     # 편집 기능
     edited_content = st.text_area(
-        "생성된 내용을 편집하세요 (논문 저자 관련 문제는 차후 업데이트 하겠습니다):",
+        "생성된 내용을 편집하세요 :",
         content,
         height=300,
-        key="edit_content_3"
+        key="edit_content_2"
     )
     st.warning("다음 섹션으로 넘어가기 전에 편집내용 저장 버튼을 누르세요.")
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("편집 내용 저장", key="save_edit_3"):
+        if st.button("편집 내용 저장", key="save_edit_2"):
             # 현재 내용을 히스토리에 추가
-            st.session_state["3. 연구 배경_history"].append(content)
-            save_section_content("3. 연구 배경", edited_content)
+            st.session_state["2. 연구 배경_history"].append(content)
+            save_section_content("2. 연구 배경", edited_content)
             st.success("편집된 내용이 저장되었습니다.")
             st.rerun()
     with col2:
-        if st.button("실행 취소", key="undo_edit_3"):
-            if st.session_state["3. 연구 배경_history"]:
+        if st.button("실행 취소", key="undo_edit_2"):
+            if st.session_state["2. 연구 배경_history"]:
                 # 히스토리에서 마지막 항목을 가져와 현재 내용으로 설정
-                previous_content = st.session_state["3. 연구 배경_history"].pop()
-                save_section_content("3. 연구 배경", previous_content)
+                previous_content = st.session_state["2. 연구 배경_history"].pop()
+                save_section_content("2. 연구 배경", previous_content)
                 st.success("이전 버전으로 되돌렸습니다.")
                 st.rerun()
             else:
@@ -859,22 +860,22 @@ def levenshtein_distance(s1, s2):
         previous_row = current_row
     return previous_row[-1]
 
-# 4. 선정기준, 제외기준 작성 함수
+# 3. 선정기준, 제외기준 작성 함수
 def write_selection_criteria():
-    st.markdown("## 4. 선정기준, 제외기준")
+    st.markdown("## 3. 선정기준, 제외기준")
     
     # 히스토리 초기화
-    if "4. 선정기준, 제외기준_history" not in st.session_state:
-        st.session_state["4. 선정기준, 제외기준_history"] = []
+    if "3. 선정기준, 제외기준_history" not in st.session_state:
+        st.session_state["3. 선정기준, 제외기준_history"] = []
 
     # 사용자 입력 받기
     user_input = st.text_area("선정기준과 제외기준에 대해 AI에게 알려 줄 추가 정보나 고려사항이 있다면 입력해주세요. 특별히 없다면 빈칸으로 두어도 됩니다. 빈칸이라면 이전 섹션들의 내용을 기반으로 선정기준, 제외기준을 제안합니다:", height=150)
 
     if st.button("선정, 제외기준 AI에게 추천받기"):
-        research_purpose = load_section_content("2. 연구 목적")
-        research_background = load_section_content("3. 연구 배경")
+        research_purpose = load_section_content("1. 연구 목적")
+        research_background = load_section_content("2. 연구 배경")
         
-        prompt = PREDEFINED_PROMPTS["4. 선정기준, 제외기준"].format(
+        prompt = PREDEFINED_PROMPTS["3. 선정기준, 제외기준"].format(
             user_input=user_input,
             research_purpose=research_purpose,
             research_background=research_background
@@ -883,35 +884,35 @@ def write_selection_criteria():
         ai_response = generate_ai_response(prompt)
         
         # 현재 내용을 히스토리에 추가
-        current_content = load_section_content("4. 선정기준, 제외기준")
+        current_content = load_section_content("3. 선정기준, 제외기준")
         if current_content:
-            st.session_state["4. 선정기준, 제외기준_history"].append(current_content)
+            st.session_state["3. 선정기준, 제외기준_history"].append(current_content)
         
-        save_section_content("4. 선정기준, 제외기준", ai_response)
+        save_section_content("3. 선정기준, 제외기준", ai_response)
         st.rerun()
 
     # AI 응답 표시
-    content = load_section_content("4. 선정기준, 제외기준")
+    content = load_section_content("3. 선정기준, 제외기준")
     if content:
         st.markdown("### AI가 추천한 선정, 제외기준:")
         st.markdown(content)
 
         # 수정 요청 기능
-        if st.button("수정 요청하기", key="request_modification_4"):
-            st.session_state.show_modification_request_4 = True
+        if st.button("수정 요청하기", key="request_modification_3"):
+            st.session_state.show_modification_request_3 = True
             st.rerun()
 
-        if st.session_state.get('show_modification_request_4', False):
+        if st.session_state.get('show_modification_request_3', False):
             modification_request = st.text_area(
                 "수정을 원하는 부분과 수정 방향을 설명해주세요:",
                 height=150,
-                key="modification_request_4"
+                key="modification_request_3"
             )
-            if st.button("수정 요청 제출", key="submit_modification_4"):
+            if st.button("수정 요청 제출", key="submit_modification_3"):
                 if modification_request:
-                    current_content = load_section_content("4. 선정기준, 제외기준")
+                    current_content = load_section_content("3. 선정기준, 제외기준")
                     # 현재 내용을 히스토리에 추가
-                    st.session_state["4. 선정기준, 제외기준_history"].append(current_content)
+                    st.session_state["3. 선정기준, 제외기준_history"].append(current_content)
                     
                     prompt = f"""
                     현재 선정기준, 제외기준:
@@ -932,8 +933,8 @@ def write_selection_criteria():
                     """
                     modified_response = generate_ai_response(prompt)
                     
-                    save_section_content("4. 선정기준, 제외기준", modified_response)
-                    st.session_state.show_modification_request_4 = False
+                    save_section_content("3. 선정기준, 제외기준", modified_response)
+                    st.session_state.show_modification_request_3 = False
                     st.rerun()
                 else:
                     st.warning("수정 요청 내용을 입력해주세요.")
@@ -943,36 +944,36 @@ def write_selection_criteria():
         "생성된 내용을 편집하세요:",
         content,
         height=200,
-        key="edit_content_4"
+        key="edit_content_3"
     )
 
     st.warning("다음 섹션으로 넘어가기 전에 편집내용 저장 버튼을 누르세요.")
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("편집 내용 저장", key="save_edit_4"):
+        if st.button("편집 내용 저장", key="save_edit_3"):
             # 현재 내용을 히스토리에 추가
-            st.session_state["4. 선정기준, 제외기준_history"].append(content)
-            save_section_content("4. 선정기준, 제외기준", edited_content)
+            st.session_state["3. 선정기준, 제외기준_history"].append(content)
+            save_section_content("3. 선정기준, 제외기준", edited_content)
             st.success("편집된 내용이 저장되었습니다.")
             st.rerun()
     with col2:
-        if st.button("실행 취소", key="undo_edit_4"):
+        if st.button("실행 취소", key="undo_edit_3"):
             if st.session_state["4. 선정기준, 제외기준_history"]:
                 # 히스토리에서 마지막 항목을 가져와 현재 내용으로 설정
-                previous_content = st.session_state["4. 선정기준, 제외기준_history"].pop()
-                save_section_content("4. 선정기준, 제외기준", previous_content)
+                previous_content = st.session_state["3. 선정기준, 제외기준_history"].pop()
+                save_section_content("3. 선정기준, 제외기준", previous_content)
                 st.success("이전 버전으로 되돌렸습니다.")
                 st.rerun()
             else:
                 st.warning("더 이상 되돌릴 수 있는 버전이 없습니다.")
 
-# 5. 대상자 수 및 산출근거 작성 함수 (수정)
+# 4. 대상자 수 및 산출근거 작성 함수 (수정)
 def write_sample_size():
-    st.markdown("## 5. 대상자 수 및 산출근거")
+    st.markdown("## 4. 대상자 수 및 산출근거")
     
     # 히스토리 초기화
-    if "5. 대상자 수 및 산출근거_history" not in st.session_state:
-        st.session_state["5. 대상자 수 및 산출근거_history"] = []
+    if "4. 대상자 수 및 산출근거_history" not in st.session_state:
+        st.session_state["4. 대상자 수 및 산출근거_history"] = []
 
     # 안내 텍스트 추가
     st.write("이미 정해진 대상자 수가 있다면 입력해주세요. 없다면 비워두고 AI 추천받기 버튼을 눌러 추천받으세요.")
@@ -992,11 +993,11 @@ def write_sample_size():
         st.write("대상자 수가 입력되지 않았습니다. AI에게 추천을 받으세요.")
 
     if st.button("대상자 수 및 산출근거 AI에게 추천받기"):
-        research_purpose = load_section_content("2. 연구 목적")
-        research_background = load_section_content("3. 연구 배경")
-        selection_criteria = load_section_content("4. 선정기준, 제외기준")
+        research_purpose = load_section_content("1. 연구 목적")
+        research_background = load_section_content("2. 연구 배경")
+        selection_criteria = load_section_content("3. 선정기준, 제외기준")
         
-        prompt = PREDEFINED_PROMPTS["5. 대상자 수 및 산출근거"].format(
+        prompt = PREDEFINED_PROMPTS["4. 대상자 수 및 산출근거"].format(
             research_purpose=research_purpose,
             research_background=research_background,
             selection_criteria=selection_criteria,
@@ -1008,35 +1009,35 @@ def write_sample_size():
         ai_response = generate_ai_response(prompt)
         
        # 현재 내용을 히스토리에 추가
-        current_content = load_section_content("5. 대상자 수 및 산출근거")
+        current_content = load_section_content("4. 대상자 수 및 산출근거")
         if current_content:
-            st.session_state["5. 대상자 수 및 산출근거_history"].append(current_content)
+            st.session_state["4. 대상자 수 및 산출근거_history"].append(current_content)
         
-        save_section_content("5. 대상자 수 및 산출근거", ai_response)
+        save_section_content("4. 대상자 수 및 산출근거", ai_response)
         st.rerun()
 
     # AI 응답 표시
-    content = load_section_content("5. 대상자 수 및 산출근거")
+    content = load_section_content("4. 대상자 수 및 산출근거")
     if content:
         st.markdown("### AI가 추천한 대상자 수 및 산출근거:")
         st.markdown(content)
 
         # 수정 요청 기능
-        if st.button("수정 요청하기", key="request_modification_5"):
-            st.session_state.show_modification_request_5 = True
+        if st.button("수정 요청하기", key="request_modification_4"):
+            st.session_state.show_modification_request_4 = True
             st.rerun()
 
-        if st.session_state.get('show_modification_request_5', False):
+        if st.session_state.get('show_modification_request_4', False):
             modification_request = st.text_area(
                 "수정을 원하는 부분과 수정 방향을 설명해주세요:",
                 height=150,
-                key="modification_request_5"
+                key="modification_request_4"
             )
-            if st.button("수정 요청 제출", key="submit_modification_5"):
+            if st.button("수정 요청 제출", key="submit_modification_4"):
                 if modification_request:
-                    current_content = load_section_content("5. 대상자 수 및 산출근거")
+                    current_content = load_section_content("4. 대상자 수 및 산출근거")
                     # 현재 내용을 히스토리에 추가
-                    st.session_state["5. 대상자 수 및 산출근거_history"].append(current_content)
+                    st.session_state["4. 대상자 수 및 산출근거_history"].append(current_content)
                     
                     prompt = f"""
                     현재 대상자 수 및 산출근거:
@@ -1057,8 +1058,8 @@ def write_sample_size():
                     """
                     modified_response = generate_ai_response(prompt)
                     
-                    save_section_content("5. 대상자 수 및 산출근거", modified_response)
-                    st.session_state.show_modification_request_5 = False
+                    save_section_content("4. 대상자 수 및 산출근거", modified_response)
+                    st.session_state.show_modification_request_4 = False
                     st.rerun()
                 else:
                     st.warning("수정 요청 내용을 입력해주세요.")
@@ -1068,47 +1069,47 @@ def write_sample_size():
         "생성된 내용을 편집하세요:",
         content,
         height=300,
-        key="edit_content_5"
+        key="edit_content_4"
     )
 
     st.warning("다음 섹션으로 넘어가기 전에 편집내용 저장 버튼을 누르세요.")
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("편집 내용 저장", key="save_edit_5"):
+        if st.button("편집 내용 저장", key="save_edit_4"):
             # 현재 내용을 히스토리에 추가
-            st.session_state["5. 대상자 수 및 산출근거_history"].append(content)
-            save_section_content("5. 대상자 수 및 산출근거", edited_content)
+            st.session_state["4. 대상자 수 및 산출근거_history"].append(content)
+            save_section_content("4. 대상자 수 및 산출근거", edited_content)
             st.success("편집된 내용이 저장되었습니다.")
             st.rerun()
     with col2:
-        if st.button("실행 취소", key="undo_edit_5"):
-            if st.session_state["5. 대상자 수 및 산출근거_history"]:
+        if st.button("실행 취소", key="undo_edit_4"):
+            if st.session_state["4. 대상자 수 및 산출근거_history"]:
                 # 히스토리에서 마지막 항목을 가져와 현재 내용으로 설정
-                previous_content = st.session_state["5. 대상자 수 및 산출근거_history"].pop()
-                save_section_content("5. 대상자 수 및 산출근거", previous_content)
+                previous_content = st.session_state["4. 대상자 수 및 산출근거_history"].pop()
+                save_section_content("4. 대상자 수 및 산출근거", previous_content)
                 st.success("이전 버전으로 되돌렸습니다.")
                 st.rerun()
             else:
                 st.warning("더 이상 되돌릴 수 있는 버전이 없습니다.")
 
-#6. 자료분석과 통계적 방법 함수
+#5. 자료분석과 통계적 방법 함수
 def write_data_analysis():
-    st.markdown("## 6. 자료분석과 통계적 방법")
+    st.markdown("## 5. 자료분석과 통계적 방법")
     
     # 히스토리 초기화
-    if "6. 자료분석과 통계적 방법_history" not in st.session_state:
-        st.session_state["6. 자료분석과 통계적 방법_history"] = []
+    if "5. 자료분석과 통계적 방법_history" not in st.session_state:
+        st.session_state["5. 자료분석과 통계적 방법_history"] = []
 
     # 사용자 입력 받기
     user_input = st.text_area("자료분석과 통계적 방법에 대해 AI에게 알려줄 추가 정보나 고려사항이 있다면 입력해주세요. 특별히 없다면 빈칸으로 두어도 됩니다. 빈칸이라면 이전 섹션들의 내용을 기반으로 선정기준, 제외기준을 제안합니다:", height=150)
 
     if st.button("자료분석 및 통계방법 AI에게 추천받기"):
-        research_purpose = load_section_content("2. 연구 목적")
-        research_background = load_section_content("3. 연구 배경")
-        selection_criteria = load_section_content("4. 선정기준, 제외기준")
-        sample_size = load_section_content("5. 대상자 수 및 산출근거")
+        research_purpose = load_section_content("1. 연구 목적")
+        research_background = load_section_content("2. 연구 배경")
+        selection_criteria = load_section_content("3. 선정기준, 제외기준")
+        sample_size = load_section_content("4. 대상자 수 및 산출근거")
         
-        prompt = PREDEFINED_PROMPTS["6. 자료분석과 통계적 방법"].format(
+        prompt = PREDEFINED_PROMPTS["5. 자료분석과 통계적 방법"].format(
             user_input=user_input,
             research_purpose=research_purpose,
             research_background=research_background,
@@ -1119,35 +1120,35 @@ def write_data_analysis():
         ai_response = generate_ai_response(prompt)
         
         # 현재 내용을 히스토리에 추가
-        current_content = load_section_content("6. 자료분석과 통계적 방법")
+        current_content = load_section_content("5. 자료분석과 통계적 방법")
         if current_content:
-            st.session_state["6. 자료분석과 통계적 방법_history"].append(current_content)
+            st.session_state["5. 자료분석과 통계적 방법_history"].append(current_content)
         
-        save_section_content("6. 자료분석과 통계적 방법", ai_response)
+        save_section_content("5. 자료분석과 통계적 방법", ai_response)
         st.rerun()
 
     # AI 응답 표시
-    content = load_section_content("6. 자료분석과 통계적 방법")
+    content = load_section_content("5. 자료분석과 통계적 방법")
     if content:
         st.markdown("### AI가 추천한 자료분석과 통계적 방법 (1000자 내외):")
         st.markdown(content)
 
         # 수정 요청 기능
-        if st.button("수정 요청하기", key="request_modification_6"):
-            st.session_state.show_modification_request_6 = True
+        if st.button("수정 요청하기", key="request_modification_5"):
+            st.session_state.show_modification_request_5 = True
             st.rerun()
 
-        if st.session_state.get('show_modification_request_6', False):
+        if st.session_state.get('show_modification_request_5', False):
             modification_request = st.text_area(
                 "수정을 원하는 부분과 수정 방향을 설명해주세요:",
                 height=150,
-                key="modification_request_6"
+                key="modification_request_5"
             )
-            if st.button("수정 요청 제출", key="submit_modification_6"):
+            if st.button("수정 요청 제출", key="submit_modification_5"):
                 if modification_request:
-                    current_content = load_section_content("6. 자료분석과 통계적 방법")
+                    current_content = load_section_content("5. 자료분석과 통계적 방법")
                     # 현재 내용을 히스토리에 추가
-                    st.session_state["6. 자료분석과 통계적 방법_history"].append(current_content)
+                    st.session_state["5. 자료분석과 통계적 방법_history"].append(current_content)
                     
                     prompt = f"""
                     현재 자료분석과 통계적 방법:
@@ -1173,7 +1174,7 @@ def write_data_analysis():
                     modified_response = generate_ai_response(prompt)
                     
                     save_section_content("6. 자료분석과 통계적 방법", modified_response)
-                    st.session_state.show_modification_request_6 = False
+                    st.session_state.show_modification_request_5 = False
                     st.rerun()
                 else:
                     st.warning("수정 요청 내용을 입력해주세요.")
@@ -1183,24 +1184,24 @@ def write_data_analysis():
         "생성된 내용을 편집하세요:",
         content,
         height=300,
-        key="edit_content_6"
+        key="edit_content_5"
     )
 
     st.warning("다음 섹션으로 넘어가기 전에 편집내용 저장 버튼을 누르세요.")
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("편집 내용 저장", key="save_edit_6"):
+        if st.button("편집 내용 저장", key="save_edit_5"):
             # 현재 내용을 히스토리에 추가
-            st.session_state["6. 자료분석과 통계적 방법_history"].append(content)
-            save_section_content("6. 자료분석과 통계적 방법", edited_content)
+            st.session_state["5. 자료분석과 통계적 방법_history"].append(content)
+            save_section_content("5. 자료분석과 통계적 방법", edited_content)
             st.success("편집된 내용이 저장되었습니다.")
             st.rerun()
     with col2:
-        if st.button("실행 취소", key="undo_edit_6"):
-            if st.session_state["6. 자료분석과 통계적 방법_history"]:
+        if st.button("실행 취소", key="undo_edit_5"):
+            if st.session_state["5. 자료분석과 통계적 방법_history"]:
                 # 히스토리에서 마지막 항목을 가져와 현재 내용으로 설정
-                previous_content = st.session_state["6. 자료분석과 통계적 방법_history"].pop()
-                save_section_content("6. 자료분석과 통계적 방법", previous_content)
+                previous_content = st.session_state["5. 자료분석과 통계적 방법_history"].pop()
+                save_section_content("5. 자료분석과 통계적 방법", previous_content)
                 st.success("이전 버전으로 되돌렸습니다.")
                 st.rerun()
             else:
@@ -1213,9 +1214,9 @@ def write_data_analysis():
         if char_count > 1000:
             st.warning("글자 수가 1000자를 초과했습니다. 내용을 줄여주세요.")
 
-#7. 연구방법 정리 함수
+#6. 연구방법 정리 함수
 def write_research_method():
-    st.markdown("## 7. 연구방법")
+    st.markdown("## 6. 연구방법")
         
     # 안내 글 추가
     st.markdown("""
@@ -1225,16 +1226,16 @@ def write_research_method():
     
     # 히스토리 초기화
     if "7. 연구방법_history" not in st.session_state:
-        st.session_state["7. 연구방법_history"] = []
+        st.session_state["6. 연구방법_history"] = []
 
     if st.button("연구방법 정리 요청하기"):
-        research_purpose = load_section_content("2. 연구 목적")
-        research_background = load_section_content("3. 연구 배경")
-        selection_criteria = load_section_content("4. 선정기준, 제외기준")
-        sample_size = load_section_content("5. 대상자 수 및 산출근거")
-        data_analysis = load_section_content("6. 자료분석과 통계적 방법")
+        research_purpose = load_section_content("1. 연구 목적")
+        research_background = load_section_content("2. 연구 배경")
+        selection_criteria = load_section_content("3. 선정기준, 제외기준")
+        sample_size = load_section_content("4. 대상자 수 및 산출근거")
+        data_analysis = load_section_content("5. 자료분석과 통계적 방법")
         
-        prompt = PREDEFINED_PROMPTS["7. 연구방법"].format(
+        prompt = PREDEFINED_PROMPTS["6. 연구방법"].format(
             research_purpose=research_purpose,
             research_background=research_background,
             selection_criteria=selection_criteria,
@@ -1245,35 +1246,35 @@ def write_research_method():
         ai_response = generate_ai_response(prompt)
         
         # 현재 내용을 히스토리에 추가
-        current_content = load_section_content("7. 연구방법")
+        current_content = load_section_content("6. 연구방법")
         if current_content:
-            st.session_state["7. 연구방법_history"].append(current_content)
+            st.session_state["6. 연구방법_history"].append(current_content)
         
-        save_section_content("7. 연구방법", ai_response)
+        save_section_content("6. 연구방법", ai_response)
         st.rerun()
 
     # AI 응답 표시
-    content = load_section_content("7. 연구방법")
+    content = load_section_content("6. 연구방법")
     if content:
         st.markdown("### AI가 정리한 연구방법:")
         st.markdown(content)
 
         # 수정 요청 기능
-        if st.button("수정 요청하기", key="request_modification_7"):
-            st.session_state.show_modification_request_7 = True
+        if st.button("수정 요청하기", key="request_modification_6"):
+            st.session_state.show_modification_request_6 = True
             st.rerun()
 
-        if st.session_state.get('show_modification_request_7', False):
+        if st.session_state.get('show_modification_request_6', False):
             modification_request = st.text_area(
                 "수정을 원하는 부분과 수정 방향을 설명해주세요:",
                 height=150,
-                key="modification_request_7"
+                key="modification_request_6"
             )
-            if st.button("수정 요청 제출", key="submit_modification_7"):
+            if st.button("수정 요청 제출", key="submit_modification_6"):
                 if modification_request:
-                    current_content = load_section_content("7. 연구방법")
+                    current_content = load_section_content("6. 연구방법")
                     # 현재 내용을 히스토리에 추가
-                    st.session_state["7. 연구방법_history"].append(current_content)
+                    st.session_state["6. 연구방법_history"].append(current_content)
                     
                     prompt = f"""
                     현재 연구방법:
@@ -1302,8 +1303,8 @@ def write_research_method():
                     """
                     modified_response = generate_ai_response(prompt)
                     
-                    save_section_content("7. 연구방법", modified_response)
-                    st.session_state.show_modification_request_7 = False
+                    save_section_content("6. 연구방법", modified_response)
+                    st.session_state.show_modification_request_6 = False
                     st.rerun()
                 else:
                     st.warning("수정 요청 내용을 입력해주세요.")
@@ -1313,24 +1314,24 @@ def write_research_method():
         "연구방법을 직접 여기에 작성하거나, 위 버튼을 눌러 AI의 정리를 받으세요. 생성된 내용을 편집하세요:",
         content,
         height=150,
-        key="edit_content_7"
+        key="edit_content_6"
     )
 
     st.warning("다음 섹션으로 넘어가기 전에 편집내용 저장 버튼을 누르세요.")
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("편집 내용 저장", key="save_edit_7"):
+        if st.button("편집 내용 저장", key="save_edit_6"):
             # 현재 내용을 히스토리에 추가
-            st.session_state["7. 연구방법_history"].append(content)
-            save_section_content("7. 연구방법", edited_content)
+            st.session_state["6. 연구방법_history"].append(content)
+            save_section_content("6. 연구방법", edited_content)
             st.success("편집된 내용이 저장되었습니다.")
             st.rerun()
     with col2:
-        if st.button("실행 취소", key="undo_edit_7"):
-            if st.session_state["7. 연구방법_history"]:
+        if st.button("실행 취소", key="undo_edit_6"):
+            if st.session_state["6. 연구방법_history"]:
                 # 히스토리에서 마지막 항목을 가져와 현재 내용으로 설정
-                previous_content = st.session_state["7. 연구방법_history"].pop()
-                save_section_content("7. 연구방법", previous_content)
+                previous_content = st.session_state["6. 연구방법_history"].pop()
+                save_section_content("6. 연구방법", previous_content)
                 st.success("이전 버전으로 되돌렸습니다.")
                 st.rerun()
             else:
@@ -1343,13 +1344,13 @@ def write_research_method():
         if char_count > 500:
             st.warning("글자 수가 500자를 초과했습니다. 내용을 줄여주세요.")
 
-# 연구 과제명 작성 함수
+# 7. 연구 과제명 작성 함수
 def write_research_title():
-    st.markdown("## 1. 연구 과제명")
+    st.markdown("## 7. 연구 과제명")
     
     # 히스토리 초기화
-    if "1. 연구 과제명_history" not in st.session_state:
-        st.session_state["1. 연구 과제명_history"] = []
+    if "7. 연구 과제명_history" not in st.session_state:
+        st.session_state["7. 연구 과제명_history"] = []
 
     # 완료 메시지 표시 (있는 경우)
     if 'completion_message' in st.session_state:
@@ -1368,14 +1369,14 @@ def write_research_title():
 
     # "연구 과제명 추천받기" 버튼을 여기로 이동
     if st.button("연구 과제명 AI에게 추천받기"):
-        research_purpose = load_section_content("2. 연구 목적")
-        research_background = load_section_content("3. 연구 배경")
-        selection_criteria = load_section_content("4. 선정기준, 제외기준")
-        sample_size = load_section_content("5. 대상자 수 및 산출근거")
-        data_analysis = load_section_content("6. 자료분석과 통계적 방법")
-        research_method = load_section_content("7. 연구방법")
+        research_purpose = load_section_content("1. 연구 목적")
+        research_background = load_section_content("2. 연구 배경")
+        selection_criteria = load_section_content("3. 선정기준, 제외기준")
+        sample_size = load_section_content("4. 대상자 수 및 산출근거")
+        data_analysis = load_section_content("5. 자료분석과 통계적 방법")
+        research_method = load_section_content("6. 연구방법")
         
-        prompt = PREDEFINED_PROMPTS["1. 연구 과제명"].format(
+        prompt = PREDEFINED_PROMPTS["7. 연구 과제명"].format(
             user_input=user_input,
             research_purpose=research_purpose,
             research_background=research_background,
@@ -1391,39 +1392,39 @@ def write_research_title():
         options = parse_and_validate_titles(ai_response)
         
         if options:
-            save_section_content("1. 연구 과제명", "\n\n".join(options))
+            save_section_content("7. 연구 과제명", "\n\n".join(options))
             st.rerun()
         else:
             st.error("AI가 올바른 형식의 연구 과제명을 생성하지 못했습니다. 다시 시도해주세요.")
 
-    content = load_section_content("1. 연구 과제명")
+    content = load_section_content("7. 연구 과제명")
 
     # 편집 기능 (항상 표시)
     edited_content = st.text_area(
         "연구 과제명을 직접 입력하거나 편집하세요:",
         content if content else "",
         height=150,
-        key="edit_content_1"
+        key="edit_content_7"
     )
 
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("편집 내용 저장", key="save_edit_1"):
+        if st.button("편집 내용 저장", key="save_edit_7"):
             if edited_content:
                 # 현재 내용을 히스토리에 추가
                 if content:
-                    st.session_state["1. 연구 과제명_history"].append(content)
-                save_section_content("1. 연구 과제명", edited_content)
+                    st.session_state["7. 연구 과제명_history"].append(content)
+                save_section_content("7. 연구 과제명", edited_content)
                 st.success("편집된 내용이 저장되었습니다.")
                 st.rerun()
             else:
                 st.warning("저장할 내용을 입력해주세요.")
 
     with col2:
-        if st.button("이전 버전으로 되돌리기", key="undo_edit_1"):
-            if st.session_state["1. 연구 과제명_history"]:
-                previous_content = st.session_state["1. 연구 과제명_history"].pop()
-                save_section_content("1. 연구 과제명", previous_content)
+        if st.button("이전 버전으로 되돌리기", key="undo_edit_7"):
+            if st.session_state["7. 연구 과제명_history"]:
+                previous_content = st.session_state["7. 연구 과제명_history"].pop()
+                save_section_content("7. 연구 과제명", previous_content)
                 st.success("이전 버전으로 되돌렸습니다.")
                 st.rerun()
             else:
@@ -1451,21 +1452,21 @@ def write_research_title():
             st.error("유효한 연구 과제명 옵션이 없습니다. '연구 과제명 추천받기' 버튼을 다시 클릭해주세요.")
 
     # 수정 요청 기능
-    if st.button("수정 요청하기", key="request_modification_1"):
-        st.session_state.show_modification_request_1 = True
+    if st.button("수정 요청하기", key="request_modification_7"):
+        st.session_state.show_modification_request_7 = True
         st.rerun()
 
-    if st.session_state.get('show_modification_request_1', False):
+    if st.session_state.get('show_modification_request_7', False):
         modification_request = st.text_area(
             "수정을 원하는 부분과 수정 방향을 설명해주세요:",
             height=150,
-            key="modification_request_1"
+            key="modification_request_7"
         )
-        if st.button("수정 요청 제출", key="submit_modification_1"):
+        if st.button("수정 요청 제출", key="submit_modification_7"):
             if modification_request:
-                current_content = load_section_content("1. 연구 과제명")
+                current_content = load_section_content("7. 연구 과제명")
                 # 현재 내용을 히스토리에 추가
-                st.session_state["1. 연구 과제명_history"].append(current_content)
+                st.session_state["7. 연구 과제명_history"].append(current_content)
                 
                 prompt = f"""
                 현재 연구 과제명 옵션들:
@@ -1495,8 +1496,8 @@ def write_research_title():
                 """
                 modified_response = generate_ai_response(prompt)
                 
-                save_section_content("1. 연구 과제명", modified_response)
-                st.session_state.show_modification_request_1 = False
+                save_section_content("7. 연구 과제명", modified_response)
+                st.session_state.show_modification_request_7 = False
                 st.rerun()
             else:
                 st.warning("수정 요청 내용을 입력해주세요.")
@@ -1537,7 +1538,7 @@ def extract_pdf_metadata(pdf_file):
         """
         
         response = st.session_state.anthropic_client.messages.create(
-            model="claude-3-5-sonnet-20240620",
+            model="claude-3-5-sonnet-20241022",
             max_tokens=300,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -1699,19 +1700,19 @@ def render_home_page():
 
 def render_section_page():
     # 현재 섹션에 따른 작성 인터페이스 표시
-    if st.session_state.current_section == "1. 연구 과제명":
+    if st.session_state.current_section == "1. 연구 목적":
         write_research_title()
-    elif st.session_state.current_section == "2. 연구 목적":
+    elif st.session_state.current_section == "2. 연구 배경":
         write_research_purpose()
-    elif st.session_state.current_section == "3. 연구 배경":
+    elif st.session_state.current_section == "3. 선정기준, 제외기준":
         write_research_background()
-    elif st.session_state.current_section == "4. 선정기준, 제외기준":
+    elif st.session_state.current_section == "4. 대상자 수 및 산출근거":
         write_selection_criteria()
-    elif st.session_state.current_section == "5. 대상자 수 및 산출근거":
+    elif st.session_state.current_section == "5. 자료분석과 통계적 방법":
         write_sample_size()
-    elif st.session_state.current_section == "6. 자료분석과 통계적 방법":
+    elif st.session_state.current_section == "6. 연구방법":
         write_data_analysis()
-    elif st.session_state.current_section == "7. 연구방법":
+    elif st.session_state.current_section == "7. 연구 과제명":
         write_research_method()
 
     # 이전 섹션과 다음 섹션 버튼
@@ -1809,17 +1810,11 @@ def render_preview_mode():
 def generate_full_content():
     sections_content = {}
         
-    # 1. 연구 과제명을 먼저 표시
-    title_content = load_section_content("1. 연구 과제명")
-    if title_content:
-        sections_content["1. 연구 과제명"] = title_content
-    
-    # 2~7번 섹션 표시
+    # 섹션 순서대로 내용 추가
     for section in RESEARCH_SECTIONS:
-        if section != "1. 연구 과제명":  # 1번 섹션은 이미 처리했으므로 제외
-            section_content = load_section_content(section)
-            if section_content:  # 내용이 있는 경우에만 추가
-                sections_content[section] = section_content
+        section_content = load_section_content(section)
+        if section_content:
+            sections_content[section] = section_content
     
     # 참고문헌 편집된 내용을 세션 상태에서 로드하여 반영
     references_content = load_section_content("참고문헌")

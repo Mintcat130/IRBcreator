@@ -1700,19 +1700,19 @@ def render_home_page():
 
 def render_section_page():
     # 현재 섹션에 따른 작성 인터페이스 표시
-    if st.session_state.current_section == "1. 연구 목적":
+    if st.session_state.current_section == "7. 연구 과제명":
         write_research_title()
-    elif st.session_state.current_section == "2. 연구 배경":
+    elif st.session_state.current_section == "1. 연구 목적":
         write_research_purpose()
-    elif st.session_state.current_section == "3. 선정기준, 제외기준":
+    elif st.session_state.current_section == "2. 연구 배경":
         write_research_background()
-    elif st.session_state.current_section == "4. 대상자 수 및 산출근거":
+    elif st.session_state.current_section == "3. 선정기준, 제외기준":
         write_selection_criteria()
-    elif st.session_state.current_section == "5. 자료분석과 통계적 방법":
+    elif st.session_state.current_section == "4. 대상자 수 및 산출근거":
         write_sample_size()
-    elif st.session_state.current_section == "6. 연구방법":
+    elif st.session_state.current_section == "5. 자료분석과 통계적 방법":
         write_data_analysis()
-    elif st.session_state.current_section == "7. 연구 과제명":
+    elif st.session_state.current_section == "6. 연구 방법":
         write_research_method()
 
     # 이전 섹션과 다음 섹션 버튼

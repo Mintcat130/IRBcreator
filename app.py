@@ -1628,7 +1628,7 @@ def chat_interface():
         st.session_state.view_mode = 'edit'
 
     # 버튼 스타일링
-   if 'api_key' not in st.session_state or not st.session_state.api_key:
+    if 'api_key' not in st.session_state or not st.session_state.api_key:
         api_key = st.text_input("Anthropic API 키를 입력하세요:", type="password")
         
         # API 키 확인 버튼

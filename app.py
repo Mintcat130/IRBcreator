@@ -1627,66 +1627,66 @@ def chat_interface():
     if 'view_mode' not in st.session_state:
         st.session_state.view_mode = 'edit'
 
-# API 키 입력 부분의 코드를 다음과 같이 수정
-if 'api_key' not in st.session_state or not st.session_state.api_key:
-    api_key = st.text_input("Anthropic API 키를 입력하세요:", type="password")
-    
-    # CSS로 버튼 스타일 지정
-    st.markdown("""
-        <style>
-        div.stButton > button:first-child {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 20px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 12px;
-            border: none;
-            width: 100%;
-            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-        }
-        div.stButton > button:hover {
-            background-color: #45a049;
-            border: none;
-        }
-        /* API 키 확인 버튼은 기본 스타일 유지 */
-        div.stButton:first-child > button:first-child {
-            background-color: inherit;
-            color: inherit;
-            font-size: inherit;
-            padding: inherit;
-            width: auto;
-            box-shadow: none;
-        }
-        div.stButton:first-child > button:hover {
-            background-color: inherit;
-            color: inherit;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-    
-    if st.button("API 키 확인"):
-        client = initialize_anthropic_client(api_key)
-        if client:
-            st.success("유효한 API 키입니다. 연구계획서 작성하기 버튼을 눌러 시작하세요.")
-            st.session_state.temp_api_key = api_key
-        else:
-            st.error("API 키 설정에 실패했습니다. 키를 다시 확인해 주세요.")
+    # API 키 입력 부분의 코드를 다음과 같이 수정
+    if 'api_key' not in st.session_state or not st.session_state.api_key:
+        api_key = st.text_input("Anthropic API 키를 입력하세요:", type="password")
+        
+        # CSS로 버튼 스타일 지정
+        st.markdown("""
+            <style>
+            div.stButton > button:first-child {
+                background-color: #4CAF50;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 20px;
+                margin: 4px 2px;
+                cursor: pointer;
+                border-radius: 12px;
+                border: none;
+                width: 100%;
+                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            }
+            div.stButton > button:hover {
+                background-color: #45a049;
+                border: none;
+            }
+            /* API 키 확인 버튼은 기본 스타일 유지 */
+            div.stButton:first-child > button:first-child {
+                background-color: inherit;
+                color: inherit;
+                font-size: inherit;
+                padding: inherit;
+                width: auto;
+                box-shadow: none;
+            }
+            div.stButton:first-child > button:hover {
+                background-color: inherit;
+                color: inherit;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+        
+        if st.button("API 키 확인"):
+            client = initialize_anthropic_client(api_key)
+            if client:
+                st.success("유효한 API 키입니다. 연구계획서 작성하기 버튼을 눌러 시작하세요.")
+                st.session_state.temp_api_key = api_key
+            else:
+                st.error("API 키 설정에 실패했습니다. 키를 다시 확인해 주세요.")
 
-    # Streamlit 기본 버튼 사용 (CSS로 스타일링됨)
-    if st.button("연구계획서 작성하기 ✏️"):
-        if 'temp_api_key' in st.session_state:
-            st.session_state.api_key = st.session_state.temp_api_key
-            st.session_state.anthropic_client = initialize_anthropic_client(st.session_state.api_key)
-            del st.session_state.temp_api_key
-            st.success("API 키가 설정되었습니다!")
-            st.rerun()
-        else:
-            st.warning("먼저 API 키를 입력하고 확인해주세요.")
+        # Streamlit 기본 버튼 사용 (CSS로 스타일링됨)
+        if st.button("연구계획서 작성하기 ✏️"):
+            if 'temp_api_key' in st.session_state:
+                st.session_state.api_key = st.session_state.temp_api_key
+                st.session_state.anthropic_client = initialize_anthropic_client(st.session_state.api_key)
+                del st.session_state.temp_api_key
+                st.success("API 키가 설정되었습니다!")
+                st.rerun()
+            else:
+                st.warning("먼저 API 키를 입력하고 확인해주세요.")
 
     # API 키가 설정된 후의 메인 인터페이스
     else:

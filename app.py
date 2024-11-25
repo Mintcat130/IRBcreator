@@ -1631,16 +1631,14 @@ def chat_interface():
     if 'api_key' not in st.session_state or not st.session_state.api_key:
         api_key = st.text_input("Anthropic API 키를 입력하세요:", type="password")
         
-        # 기본 스타일의 API 키 확인 버튼
-        col1, col2, col3 = st.columns([1, 1, 1])
-        with col1:
-            if st.button("API 키 확인", key='check_api'):
-                client = initialize_anthropic_client(api_key)
-                if client:
-                    st.success("유효한 API 키입니다. 연구계획서 작성하기 버튼을 눌러 시작하세요.")
-                    st.session_state.temp_api_key = api_key
-                else:
-                    st.error("API 키 설정에 실패했습니다. 키를 다시 확인해 주세요.")
+        # API 키 확인 버튼
+        if st.button("API 키 확인"):
+            client = initialize_anthropic_client(api_key)
+            if client:
+                st.success("유효한 API 키입니다. 연구계획서 작성하기 버튼을 눌러 시작하세요.")
+                st.session_state.temp_api_key = api_key
+            else:
+                st.error("API 키 설정에 실패했습니다. 키를 다시 확인해 주세요.")
 
         st.write("")
         st.write("")
@@ -1648,23 +1646,20 @@ def chat_interface():
         # 큰 버튼용 스타일
         st.markdown("""
             <style>
-            div[data-testid="stButton"] button[kind="secondary"][data-testid="start_writing"] {
+            div.stButton > button {
                 width: 100%;
                 height: 100px;
                 font-size: 24px;
                 font-weight: bold;
                 background-color: #4CAF50;
                 color: white;
-                border-radius: 12px;
-                box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
             }
             </style>
         """, unsafe_allow_html=True)
         
-        # 연구계획서 작성하기 버튼
-        start_container = st.container()
-        with start_container:
-            if st.button("연구계획서 작성하기 ✏️", key='start_writing'):
+        # 연구계획서 작성하기 버튼만 별도의 container에 배치
+        with st.container():
+            if st.button("연구계획서 작성하기 ✏️"):
                 if 'temp_api_key' in st.session_state:
                     st.session_state.api_key = st.session_state.temp_api_key
                     st.session_state.anthropic_client = initialize_anthropic_client(st.session_state.api_key)

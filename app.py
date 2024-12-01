@@ -1677,40 +1677,57 @@ def extract_pdf_metadata(pdf_file):
 
 # 전체 연구계획서 점검 및 피드백 함수
 def review_full_research_plan():
-    # 버튼을 눌러 점검 시작하기
-    if st.button("연구계획서 점검 요청하기", key="review_research_plan"):
-        # 각 섹션의 내용을 불러오기
-        sections = ["1. 연구 목적", "2. 연구 배경", "3. 선정기준, 제외기준", "4. 대상자 수 및 산출근거", 
-                    "5. 자료분석과 통계적 방법", "6. 연구방법", "7. 연구 과제명"]
-        full_content = ""
-        for section in sections:
-            content = load_section_content(section)
-            if content:
-                full_content += f"{section}:\n{content}\n\n"
+    # 각 섹션의 내용을 불러오기
+    sections = ["1. 연구 목적", "2. 연구 배경", "3. 선정기준, 제외기준", "4. 대상자 수 및 산출근거", 
+                "5. 자료분석과 통계적 방법", "6. 연구방법", "7. 연구 과제명"]
+    full_content = ""
+    for section in sections:
+        content = load_section_content(section)
+        if content:
+            full_content += f"{section}:\n{content}\n\n"
 
-        # 전체 내용을 검토하고 피드백을 제공하도록 AI에게 요청
-        prompt = f"""
-        다음은 작성된 연구계획서의 전체 내용입니다. 각 섹션을 읽고, 어색한 부분이나 수정이 필요한 부분을 제안해주세요. 
-        가능한 한 명확하고 구체적으로 피드백을 제공해주세요. 
-        전체 내용:
-        {full_content}
-        """
-        
-        try:
-            if 'anthropic_client' in st.session_state and st.session_state.anthropic_client:
-                response = st.session_state.anthropic_client.messages.create(
-                    model="claude-3-5-sonnet-20241022",
-                    max_tokens=2000,
-                    messages=[{"role": "user", "content": prompt}]
-                )
-                st.markdown("### AI의 피드백:")
-                st.markdown(response.content[0].text)
-            else:
-                st.error("API 클라이언트가 초기화되지 않았습니다. API 키를 다시 확인해주세요.")
-        except anthropic.APIError as e:
-            st.error(f"Anthropic API 오류: {str(e)}")
-        except Exception as e:
-            st.error(f"예상치 못한 오류 발생: {str(e)}")
+    # 전체 내용을 검토하고 피드백을 제공하도록 AI에게 요청
+    prompt = f"""
+    다음은 작성된 연구계획서의 전체 내용입니다. 
+    제가 작성한 연구계획서를 검토하고, 수정이 필요한 부분만 지적하며, 기존 문장을 어떻게 수정하면 좋을지 구체적인 예시를 들어서 제안해 주세요. 
+    검토 시 다음의 네 가지 항목만 고려해 주세요:
+
+    1. 연구 목적 및 배경
+    - 명확성: 연구의 목적이 명확하게 기술되어 있는지 확인합니다.
+    - 의의: 연구가 학문적, 사회적으로 어떤 기여를 할 수 있는지 평가합니다.
+
+    2. 연구 설계 및 방법론
+    - 적합성: 연구 설계가 연구 목적을 달성하는 데 적합한지 검토합니다.
+    - 타당성: 연구 방법론이 과학적으로 타당하고 재현 가능한지 평가합니다.
+
+    3.참여자 모집 및 선정 기준
+    - 선정 기준: 참여자의 포함 및 제외 기준이 명확하고 합리적인지 확인합니다.
+    - 모집 방법: 참여자 모집 방식이 공정하고 차별적이지 않은지 검토합니다.
+
+    4.*데이터 분석 방법의 적절성
+    - 분석 방법 검토: 데이터 분석 방법이 연구 목적에 적합하고, 과학적으로 타당한지 검토합니다.
+    - 통계적 유의성 확보: 데이터의 통계적 분석이 충분히 검증되었는지 확인합니다.
+
+
+    전체 내용:
+    {full_content}
+    """
+    
+    try:
+        if 'anthropic_client' in st.session_state and st.session_state.anthropic_client:
+            response = st.session_state.anthropic_client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=2000,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            st.markdown("### AI의 피드백:")
+            st.markdown(response.content[0].text)
+        else:
+            st.error("API 클라이언트가 초기화되지 않았습니다. API 키를 다시 확인해주세요.")
+    except anthropic.APIError as e:
+        st.error(f"Anthropic API 오류: {str(e)}")
+    except Exception as e:
+        st.error(f"예상치 못한 오류 발생: {str(e)}")
 
 
         
@@ -1887,20 +1904,63 @@ def render_section_page():
 
 def render_preview_mode():
     st.markdown("## 전체 연구계획서 미리보기")
+    st.markdown("각 섹션의 내용은 편집 가능합니다.")
     
+    # 섹션별 내용 표시 및 편집
     sections_content = generate_full_content()
-
     for section, content in sections_content.items():
-        st.subheader(section)
-        if section == "참고문헌":
-            references_content = st.text_area("참고문헌 편집", content, height=300)
-            if st.button("참고문헌 저장", key="save_references"):
-                save_section_content("참고문헌", references_content)
-                st.success("참고문헌 내용이 저장되었습니다.")
+        if section != "참고문헌":  # 참고문헌 제외
+            st.markdown(f"### {section}")
+            section_content = st.text_area(
+                f"{section} 내용 편집",
+                value=content,
+                height=300,
+                key=f"edit_{section}"
+            )
+            if st.button(f"{section} 저장", key=f"save_{section}"):
+                save_section_content(section, section_content)
+                st.success(f"{section} 내용이 저장되었습니다.")
+
+    # 참고문헌은 별도로 표시 및 편집
+    st.markdown("---")
+    st.markdown("### 참고문헌")
+    references_content = load_section_content("참고문헌")
+    references_content = st.text_area(
+        "참고문헌 내용에 수정이 필요하면 편집하세요",
+        value=references_content,
+        height=300,
+        key="edit_references"
+    )
+    if st.button("참고문헌 저장", key="save_references"):
+        save_section_content("참고문헌", references_content)
+        st.success("참고문헌 내용이 저장되었습니다.")
+
+    # 점검 요청 버튼 상태 관리
+    st.markdown("---")
+    st.markdown("### 전체 연구계획서 점검 및 피드백")
+
+    # 상태 초기화 (세션에서 초기화되지 않은 경우만)
+    if "review_clicked" not in st.session_state:
+        st.session_state.review_clicked = False
+
+    # 항상 버튼 표시
+    if st.button("연구계획서 점검 요청하기", key="review_research_plan"):
+        if not st.session_state.review_clicked:
+            # 함수 실행 전에 상태 업데이트를 수행합니다.
+            st.session_state.review_clicked = True
+            review_full_research_plan()
         else:
-            st.code(content, language="markdown")
-    
-    uploaded_file = st.file_uploader("IRB 연구계획서 DOCX 템플릿을 업로드하세요", type="docx")
+            st.warning("점검 요청이 이미 진행되었습니다. 새로고침 후 다시 시도하세요.")
+
+    # 추가로, 필요 시 상태를 초기화할 수 있는 버튼 추가
+    if st.button("점검 상태 초기화", key="reset_review_state"):
+        st.session_state.review_clicked = False
+        st.success("점검 상태가 초기화되었습니다. 다시 요청할 수 있습니다.")
+
+    # 전체 내용 DOCX파일로 내보내기 
+    st.markdown("---")
+    st.markdown("### 연구계획서 내용 DOCX파일로 내보내기")
+    uploaded_file = st.file_uploader("가지고 있는 IRB 연구계획서 DOCX 템플릿을 업로드하세요", type="docx")
     
     if uploaded_file is not None:
         if 'doc' not in st.session_state:
@@ -1948,12 +2008,7 @@ def render_preview_mode():
                     st.error("자세한 오류 정보:")
                     st.exception(e)
 
-        # 추가: 전체 연구계획서 점검 및 피드백 버튼
     st.markdown("---")
-    st.markdown("### 전체 연구계획서 점검 및 피드백")
-    if st.button("연구계획서 점검 요청하기", key="review_research_plan"):
-        review_full_research_plan()
-
     if st.button("편집 모드로 돌아가기↩️", key="back_to_edit"):
         st.session_state.view_mode = 'edit'
         st.rerun()

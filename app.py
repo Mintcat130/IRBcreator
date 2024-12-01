@@ -1605,6 +1605,7 @@ def write_research_title():
     - 전체 연구계획서 내용을 확인할 수 있습니다
     - 각 섹션의 내용을 편집할 수 있습니다
     - DOCX 파일로 내보내기가 가능합니다
+    - 작성한 전체 연구계획서에 수정할 부분이 있는지 AI의 피드백을 받을 수 있습니다
     """)
 
 def display_references():
@@ -1673,6 +1674,45 @@ def extract_pdf_metadata(pdf_file):
             'year': "Unknown year",
             'is_korean': False
         }
+
+# 전체 연구계획서 점검 및 피드백 함수
+def review_full_research_plan():
+    # 버튼을 눌러 점검 시작하기
+    if st.button("연구계획서 점검 요청하기", key="review_research_plan"):
+        # 각 섹션의 내용을 불러오기
+        sections = ["1. 연구 목적", "2. 연구 배경", "3. 선정기준, 제외기준", "4. 대상자 수 및 산출근거", 
+                    "5. 자료분석과 통계적 방법", "6. 연구방법", "7. 연구 과제명"]
+        full_content = ""
+        for section in sections:
+            content = load_section_content(section)
+            if content:
+                full_content += f"{section}:\n{content}\n\n"
+
+        # 전체 내용을 검토하고 피드백을 제공하도록 AI에게 요청
+        prompt = f"""
+        다음은 작성된 연구계획서의 전체 내용입니다. 각 섹션을 읽고, 어색한 부분이나 수정이 필요한 부분을 제안해주세요. 
+        가능한 한 명확하고 구체적으로 피드백을 제공해주세요. 
+        전체 내용:
+        {full_content}
+        """
+        
+        try:
+            if 'anthropic_client' in st.session_state and st.session_state.anthropic_client:
+                response = st.session_state.anthropic_client.messages.create(
+                    model="claude-3-5-sonnet-20241022",
+                    max_tokens=2000,
+                    messages=[{"role": "user", "content": prompt}]
+                )
+                st.markdown("### AI의 피드백:")
+                st.markdown(response.content[0].text)
+            else:
+                st.error("API 클라이언트가 초기화되지 않았습니다. API 키를 다시 확인해주세요.")
+        except anthropic.APIError as e:
+            st.error(f"Anthropic API 오류: {str(e)}")
+        except Exception as e:
+            st.error(f"예상치 못한 오류 발생: {str(e)}")
+
+
         
 def confirm_metadata(extracted_info):
     st.write("추출된 메타데이터:")
@@ -1866,7 +1906,7 @@ def render_preview_mode():
         if 'doc' not in st.session_state:
             st.session_state.doc = Document(uploaded_file)
         
-        if st.button("업로드한 파일의 섹션 확인하기"):
+        if st.button("업로드한 파일의 섹션 확인하기", key="check_sections"):
             st.session_state.matching_results = {}
             for section in sections_content.keys():
                 match = find_best_match(st.session_state.doc, section)
@@ -1880,7 +1920,7 @@ def render_preview_mode():
             st.session_state.show_confirm_button = True
 
         if st.session_state.get('show_confirm_button', False):
-            if st.button("DOCX 파일 생성"):
+            if st.button("DOCX 파일 생성", key="generate_docx"):
                 st.text("DOCX 파일 생성 버튼이 클릭되었습니다.")  # 버튼 클릭 확인 메시지
                 try:
                     # 원본 템플릿의 복사본을 만듭니다
@@ -1908,7 +1948,13 @@ def render_preview_mode():
                     st.error("자세한 오류 정보:")
                     st.exception(e)
 
-    if st.button("편집 모드로 돌아가기↩️"):
+        # 추가: 전체 연구계획서 점검 및 피드백 버튼
+    st.markdown("---")
+    st.markdown("### 전체 연구계획서 점검 및 피드백")
+    if st.button("연구계획서 점검 요청하기", key="review_research_plan"):
+        review_full_research_plan()
+
+    if st.button("편집 모드로 돌아가기↩️", key="back_to_edit"):
         st.session_state.view_mode = 'edit'
         st.rerun()
 

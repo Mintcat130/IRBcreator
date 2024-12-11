@@ -1747,16 +1747,16 @@ def review_full_research_plan():
                 messages=[{"role": "user", "content": prompt}]
             )
             feedback = response.content[0].text
-
-            # AI 피드백 출력
-            st.markdown("### AI의 피드백:")
-            st.markdown(feedback)
+            return feedback  # 피드백 반환
         else:
             st.error("API 클라이언트가 초기화되지 않았습니다. API 키를 다시 확인해주세요.")
+            return "API 초기화 오류로 인해 피드백을 생성할 수 없습니다."
     except anthropic.APIError as e:
         st.error(f"Anthropic API 오류: {str(e)}")
+        return f"API 오류: {str(e)}"
     except Exception as e:
         st.error(f"예상치 못한 오류 발생: {str(e)}")
+        return f"오류 발생: {str(e)}"
 
 
 def format_references(pdf_files):
@@ -1992,22 +1992,27 @@ def render_preview_mode():
     st.markdown("---")
     st.markdown("### 전체 연구계획서 점검 및 피드백")
 
-    # 상태 초기화 (세션에서 초기화되지 않은 경우만)
-    if "review_clicked" not in st.session_state:
-        st.session_state.review_clicked = False
+    # 기존 피드백 유지
+    if "review_feedback" not in st.session_state:
+        st.session_state.review_feedback = ""
 
-    # 항상 버튼 표시
     if st.button("연구계획서 점검 요청하기", key="review_research_plan"):
-        if not st.session_state.review_clicked:
-            # 함수 실행 전에 상태 업데이트를 수행합니다.
+        if not st.session_state.get("review_clicked", False):
             st.session_state.review_clicked = True
-            review_full_research_plan()
+            feedback = review_full_research_plan()  # 피드백 생성
+            st.session_state.review_feedback = feedback  # 피드백 저장
         else:
             st.warning("점검 요청이 이미 진행되었습니다. 새로고침 후 다시 시도하세요.")
+
+    # 피드백 표시
+    if st.session_state.review_feedback:
+        st.markdown("#### AI 피드백")
+        st.markdown(st.session_state.review_feedback)
 
     # 추가로, 필요 시 상태를 초기화할 수 있는 버튼 추가
     if st.button("점검 상태 초기화", key="reset_review_state"):
         st.session_state.review_clicked = False
+        st.session_state.review_feedback = ""
         st.success("점검 상태가 초기화되었습니다. 다시 요청할 수 있습니다.")
 
     # 전체 내용 DOCX파일로 내보내기 

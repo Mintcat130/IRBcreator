@@ -2034,21 +2034,19 @@ def render_preview_mode():
 
         if st.session_state.get('show_confirm_button', False):
             if st.button("DOCX 파일 생성", key="generate_docx"):
-                st.text("DOCX 파일 생성 버튼이 클릭되었습니다.")  # 버튼 클릭 확인 메시지
                 try:
                     # 원본 템플릿의 복사본을 만듭니다
                     filled_doc = Document(BytesIO(uploaded_file.getvalue()))
-                    st.text("DOCX 템플릿이 로드되었습니다.")
                     
-                    # 복사본에 내용을 채웁니다
-                    filled_doc = fill_docx_template(filled_doc, sections_content)
-                    st.text("fill_docx_template 함수가 실행되었습니다.")
+                    # generate_docx_file로 작업 위임
+                    filled_doc = generate_docx_file(filled_doc, sections_content)
                     
-                    # 채워진 문서를 메모리에 저장합니다
+                    # 채워진 문서를 메모리에 저장
                     docx_file = BytesIO()
                     filled_doc.save(docx_file)
                     docx_file.seek(0)
                     
+                    # 다운로드 버튼 생성
                     st.download_button(
                         label="완성된 DOCX 파일 다운로드",
                         data=docx_file,
@@ -2058,8 +2056,6 @@ def render_preview_mode():
                     st.success("DOCX 파일이 성공적으로 생성되었습니다.")
                 except Exception as e:
                     st.error(f"DOCX 파일 생성 중 오류가 발생했습니다: {str(e)}")
-                    st.error("자세한 오류 정보:")
-                    st.exception(e)
 
     st.markdown("---")
     if st.button("편집 모드로 돌아가기↩️", key="back_to_edit"):
@@ -2149,42 +2145,63 @@ def insert_content_after_section(doc, section_title, content):
     return None
 
 def fill_docx_template(doc, sections_content):
-    st.text("fill_docx_template 함수가 호출되었습니다.")  # 함수 호출 확인
-    for section, content in sections_content.items():
-        try:
+    logs = []  # 로그 메시지를 저장할 리스트
+
+    try:
+        for section, content in sections_content.items():
             if section == "3-1. 선정기준":
-                # "선정기준" 텍스트가 템플릿에 존재한다고 가정
                 section_para = find_best_match(doc, "선정기준")
                 if section_para:
-                    st.text("'선정기준' 항목을 템플릿에서 찾았습니다.")
+                    logs.append(f"'선정기준' 항목을 템플릿에서 찾았습니다.")
                     section_para.add_run("\n" + content)
-                    st.text("'선정기준' 항목에 내용이 성공적으로 추가되었습니다.")
+                    logs.append(f"'선정기준' 항목에 내용이 성공적으로 추가되었습니다.")
                 else:
-                    st.warning("'선정기준' 항목을 템플릿에서 찾을 수 없습니다.")
+                    logs.append("'선정기준' 항목을 템플릿에서 찾을 수 없습니다.")
 
             elif section == "3-2. 제외기준":
-                # "제외기준" 텍스트가 템플릿에 존재한다고 가정
                 section_para = find_best_match(doc, "제외기준")
                 if section_para:
-                    st.text("'제외기준' 항목을 템플릿에서 찾았습니다.")
+                    logs.append(f"'제외기준' 항목을 템플릿에서 찾았습니다.")
                     section_para.add_run("\n" + content)
-                    st.text("'제외기준' 항목에 내용이 성공적으로 추가되었습니다.")
+                    logs.append(f"'제외기준' 항목에 내용이 성공적으로 추가되었습니다.")
                 else:
-                    st.warning("'제외기준' 항목을 템플릿에서 찾을 수 없습니다.")
+                    logs.append("'제외기준' 항목을 템플릿에서 찾을 수 없습니다.")
 
             else:
-                # 일반 섹션 처리
                 section_para = find_best_match(doc, section)
                 if section_para:
-                    st.text(f"섹션 '{section}'을(를) 찾았습니다.")
+                    logs.append(f"섹션 '{section}'을(를) 찾았습니다.")
                     section_para.add_run("\n" + content)
-                    st.text(f"섹션 '{section}'에 내용이 성공적으로 추가되었습니다.")
+                    logs.append(f"섹션 '{section}'에 내용이 성공적으로 추가되었습니다.")
                 else:
-                    st.warning(f"섹션 '{section}'을(를) 템플릿에서 찾을 수 없습니다.")
+                    logs.append(f"섹션 '{section}'을(를) 템플릿에서 찾을 수 없습니다.")
+    except Exception as e:
+        logs.append(f"fill_docx_template에서 오류 발생: {str(e)}")
+    
+    return doc, logs
 
-        except Exception as e:
-            st.error(f"섹션 '{section}'에 내용을 추가하는 중 오류가 발생했습니다: {str(e)}")
+def generate_docx_file(doc, sections_content):
+    logs = []  # 전체 로그를 저장할 리스트
+
+    try:
+        logs.append("DOCX 파일 생성 버튼이 클릭되었습니다.")
+        logs.append("DOCX 템플릿이 로드되었습니다.")
+        
+        # fill_docx_template 호출
+        doc, template_logs = fill_docx_template(doc, sections_content)
+        logs.extend(template_logs)
+        
+        logs.append("fill_docx_template 함수가 실행되었습니다.")
+    except Exception as e:
+        st.error(f"DOCX 파일 생성 중 오류가 발생했습니다: {str(e)}")
+    
+    # 로그를 익스펜더 안에 출력
+    with st.expander("로그 보기 (클릭해서 열기)"):
+        for log in logs:
+            st.text(log)
+
     return doc
+
 
 
 def download_docx(doc):

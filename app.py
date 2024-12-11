@@ -1759,65 +1759,6 @@ def review_full_research_plan():
         st.error(f"예상치 못한 오류 발생: {str(e)}")
 
 
-
-# 수정 전 텍스트 추출 함수
-def extract_original_text(full_content, feedback_line):
-    """
-    AI의 피드백을 기반으로 원본 텍스트에서 가장 유사한 문장을 추출합니다.
-    """
-    lines = full_content.split("\n")
-    best_match = None
-    highest_similarity = 0
-
-    for line in lines:
-        # 피드백과 원본 텍스트의 유사도 계산
-        similarity = SequenceMatcher(None, feedback_line, line).ratio()
-        if similarity > highest_similarity:
-            highest_similarity = similarity
-            best_match = line
-
-    # 유사도가 0.5 이상일 때만 반환 (너무 낮은 경우는 무시)
-    if highest_similarity > 0.5:
-        return best_match
-    return "원본 텍스트를 찾을 수 없습니다."
-
-#수정 제안 반영 함수
-def apply_suggestion(original_text, feedback_line):
-    """
-    AI 피드백과 원본 텍스트를 기반으로 수정된 텍스트를 생성합니다.
-    """
-    if not original_text or original_text == "원본 텍스트를 찾을 수 없습니다.":
-        return "원본 텍스트를 찾을 수 없어서 수정 제안을 적용할 수 없습니다."
-
-    # AI에게 수정 요청
-    prompt = f"""
-    다음은 연구계획서의 일부 내용입니다:
-    {original_text}
-
-    AI의 피드백은 다음과 같습니다:
-    {feedback_line}
-
-    위 피드백을 반영하여 문장을 개선하세요. 문법적으로 올바르고 연구계획서 형식에 맞게 작성해주세요.
-    """
-    try:
-        response = st.session_state.anthropic_client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            max_tokens=500,
-            messages=[{"role": "user", "content": prompt}]
-        )
-        return response.content[0].text.strip()
-    except Exception as e:
-        return f"수정된 텍스트를 생성하는 중 오류가 발생했습니다: {str(e)}"
-
-
-        
-def confirm_metadata(extracted_info):
-    st.write("추출된 메타데이터:")
-    title = st.text_input("제목", value=extracted_info['title'])
-    authors = st.text_input("저자", value=extracted_info['authors'])
-    year = st.text_input("년도", value=extracted_info['year'])
-    return f"{authors}. {title}. {year}."
-
 def format_references(pdf_files):
     references = []
     for i, pdf_file in enumerate(pdf_files, start=1):

@@ -1996,7 +1996,7 @@ def render_preview_mode():
     if "review_feedback" not in st.session_state:
         st.session_state.review_feedback = ""
 
-    if st.button("연구계획서 점검 요청하기", key="review_research_plan"):
+    if st.button("연구계획서 피드백 요청하기 🛠️", key="review_research_plan"):
         if not st.session_state.get("review_clicked", False):
             st.session_state.review_clicked = True
             feedback = review_full_research_plan()  # 피드백 생성
@@ -2009,22 +2009,33 @@ def render_preview_mode():
         st.markdown("#### AI 피드백")
         st.markdown(st.session_state.review_feedback)
 
+    # 초기화 버튼 설명
+    st.markdown("피드백을 재요청 하려면 `피드백 상태 초기화` 후 다시 `피드백 요청하기` 버튼을 누르세요 ")
+
     # 추가로, 필요 시 상태를 초기화할 수 있는 버튼 추가
-    if st.button("점검 상태 초기화", key="reset_review_state"):
+    if st.button("피드백 상태 초기화 ♻️", key="reset_review_state"):
         st.session_state.review_clicked = False
         st.session_state.review_feedback = ""
-        st.success("점검 상태가 초기화되었습니다. 다시 요청할 수 있습니다.")
+        st.success("피드백 상태가 초기화되었습니다. 다시 요청할 수 있습니다.")
 
     # 전체 내용 DOCX파일로 내보내기 
     st.markdown("---")
     st.markdown("### 연구계획서 내용 DOCX파일로 내보내기")
+    st.markdown("""
+    순서  
+    1. 연구계획서 템플릿 파일을 업로드 하세요.  
+    2. `섹션 확인하기` 버튼을 눌러 파일 내의 섹션들과 현재 작성한 섹션들이 매칭되는지 확인하세요.  
+    3. `파일 생성` 버튼을 눌러 완성된 연구계획서 파일을 생성하세요.  
+    4. `다운로드`버튼을 눌러 생성된 파일을 저장하세요.
+    """)
+
     uploaded_file = st.file_uploader("가지고 있는 IRB 연구계획서 DOCX 템플릿을 업로드하세요", type="docx")
     
     if uploaded_file is not None:
         if 'doc' not in st.session_state:
             st.session_state.doc = Document(uploaded_file)
-        
-        if st.button("업로드한 파일의 섹션 확인하기", key="check_sections"):
+
+        if st.button("업로드한 파일의 섹션 확인하기 🔍", key="check_sections"):
             st.session_state.matching_results = {}
             for section in sections_content.keys():
                 match = find_best_match(st.session_state.doc, section)
@@ -2032,13 +2043,22 @@ def render_preview_mode():
 
 
             st.subheader("섹션 매칭 결과")
-            for section, match_text in st.session_state.matching_results.items():
-                st.write(f"{section}: {match_text}")
-        
-            st.session_state.show_confirm_button = True
+            # 박스 내 병렬 표시
+            sections = list(st.session_state.matching_results.keys())
+            matches = list(st.session_state.matching_results.values())
+
+            for section, match_text in zip(sections, matches):
+                st.markdown(f"""
+                <div style='border:1px solid #ddd;padding:10px;margin:5px;border-radius:5px;'>
+                    <div style='display:flex;justify-content:space-around;'>
+                        <div><strong>작성도우미:</strong> {section}</div>
+                        <div style='margin-left:20px;'><strong>업로드한 파일:</strong> {match_text}</div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
 
         if st.session_state.get('show_confirm_button', False):
-            if st.button("DOCX 파일 생성", key="generate_docx"):
+            if st.button("DOCX 파일 생성 📄", key="generate_docx"):
                 try:
                     # 원본 템플릿의 복사본을 만듭니다
                     filled_doc = Document(BytesIO(uploaded_file.getvalue()))
@@ -2053,7 +2073,7 @@ def render_preview_mode():
                     
                     # 다운로드 버튼 생성
                     st.download_button(
-                        label="완성된 DOCX 파일 다운로드",
+                        label="완성된 DOCX 파일 다운로드 💾",
                         data=docx_file,
                         file_name="완성된_연구계획서.docx",
                         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"

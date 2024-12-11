@@ -1949,7 +1949,10 @@ def render_section_page():
     elif st.session_state.current_section == "2. 연구 배경":
         write_research_background()
     elif st.session_state.current_section == "3. 선정기준, 제외기준":
+        st.markdown("### 3-1. 선정기준")
         write_selection_criteria()
+        st.markdown("### 3-2. 제외기준")
+        write_exclusion_criteria()
     elif st.session_state.current_section == "4. 대상자 수 및 산출근거":
         write_sample_size()
     elif st.session_state.current_section == "5. 자료분석과 통계적 방법":
@@ -1989,7 +1992,7 @@ def render_preview_mode():
     # 섹션별 내용 표시 및 편집
     sections_content = generate_full_content()
     for section, content in sections_content.items():
-        if section != "참고문헌":  # 참고문헌 제외
+        if section not in ["참고문헌", "3. 선정기준, 제외기준"]:  # 참고문헌 및 분리된 선정/제외 기준 처리 제외
             st.markdown(f"### {section}")
             section_content = st.text_area(
                 f"{section} 내용 편집",
@@ -2000,6 +2003,35 @@ def render_preview_mode():
             if st.button(f"{section} 저장", key=f"save_{section}"):
                 save_section_content(section, section_content)
                 st.success(f"{section} 내용이 저장되었습니다.")
+
+        elif section == "3. 선정기준, 제외기준":
+            # 선정기준과 제외기준 분리 표시 및 편집
+            if "제외기준:" in content:
+                selected, excluded = content.split("제외기준:", 1)
+            else:
+                selected, excluded = content, "내용 없음"
+
+            st.markdown("### 3-1. 선정기준")
+            selected_content = st.text_area(
+                "3-1. 선정기준 내용 편집",
+                value=selected.strip().replace("선정기준:", "").strip(),
+                height=300,
+                key="edit_3-1"
+            )
+            if st.button("3-1. 선정기준 저장", key="save_3-1"):
+                save_section_content("3. 선정기준, 제외기준", f"선정기준:\n{selected_content}\n제외기준:\n{excluded.strip()}")
+                st.success("3-1. 선정기준 내용이 저장되었습니다.")
+
+            st.markdown("### 3-2. 제외기준")
+            excluded_content = st.text_area(
+                "3-2. 제외기준 내용 편집",
+                value=excluded.strip(),
+                height=300,
+                key="edit_3-2"
+            )
+            if st.button("3-2. 제외기준 저장", key="save_3-2"):
+                save_section_content("3. 선정기준, 제외기준", f"선정기준:\n{selected.strip()}\n제외기준:\n{excluded_content}")
+                st.success("3-2. 제외기준 내용이 저장되었습니다.")
 
     # 참고문헌은 별도로 표시 및 편집
     st.markdown("---")
@@ -2099,7 +2131,16 @@ def generate_full_content():
     # 섹션 순서대로 내용 추가
     for section in RESEARCH_SECTIONS:
         section_content = load_section_content(section)
-        if section_content:
+        if section == "3. 선정기준, 제외기준" and section_content:
+            # 선정기준과 제외기준을 나눔
+            if "제외기준:" in section_content:
+                selected, excluded = section_content.split("제외기준:", 1)
+                sections_content["3-1. 선정기준"] = selected.strip().replace("선정기준:", "").strip()
+                sections_content["3-2. 제외기준"] = excluded.strip()
+            else:
+                sections_content["3-1. 선정기준"] = section_content.strip()
+                sections_content["3-2. 제외기준"] = "내용 없음"
+        elif section_content:
             sections_content[section] = section_content
     
     # 참고문헌 편집된 내용을 세션 상태에서 로드하여 반영
@@ -2170,25 +2211,40 @@ def fill_docx_template(doc, sections_content):
     st.text("fill_docx_template 함수가 호출되었습니다.")  # 함수 호출 확인
     for section, content in sections_content.items():
         try:
-            section_para = find_best_match(doc, section)  # 섹션 제목 단락 찾기
-            if section_para:
-                st.text(f"섹션 '{section}'을(를) 찾았습니다.")
-                
-                # 섹션 제목 아래에 새로운 내용 추가
-                st.text(f"섹션 '{section}' 아래에 내용 추가 시도 중...")
-                
-                # 기존 섹션 제목 단락에 새로운 Run 추가
-                new_run = section_para.add_run("\n" + content)
-                
-                # 스타일 설정 시 오류 방지: Run 객체에는 Paragraph 스타일을 사용하지 않음
-                # new_run.style = 'Normal'  # 이 부분을 제거
-                
-                st.text(f"'{section}' 섹션 아래에 내용이 성공적으로 추가되었습니다.")
+            if section == "3-1. 선정기준":
+                # "선정기준" 텍스트가 템플릿에 존재한다고 가정
+                section_para = find_best_match(doc, "선정기준")
+                if section_para:
+                    st.text("'선정기준' 항목을 템플릿에서 찾았습니다.")
+                    section_para.add_run("\n" + content)
+                    st.text("'선정기준' 항목에 내용이 성공적으로 추가되었습니다.")
+                else:
+                    st.warning("'선정기준' 항목을 템플릿에서 찾을 수 없습니다.")
+
+            elif section == "3-2. 제외기준":
+                # "제외기준" 텍스트가 템플릿에 존재한다고 가정
+                section_para = find_best_match(doc, "제외기준")
+                if section_para:
+                    st.text("'제외기준' 항목을 템플릿에서 찾았습니다.")
+                    section_para.add_run("\n" + content)
+                    st.text("'제외기준' 항목에 내용이 성공적으로 추가되었습니다.")
+                else:
+                    st.warning("'제외기준' 항목을 템플릿에서 찾을 수 없습니다.")
+
             else:
-                st.warning(f"섹션 '{section}'을(를) 템플릿에서 찾을 수 없습니다.")
+                # 일반 섹션 처리
+                section_para = find_best_match(doc, section)
+                if section_para:
+                    st.text(f"섹션 '{section}'을(를) 찾았습니다.")
+                    section_para.add_run("\n" + content)
+                    st.text(f"섹션 '{section}'에 내용이 성공적으로 추가되었습니다.")
+                else:
+                    st.warning(f"섹션 '{section}'을(를) 템플릿에서 찾을 수 없습니다.")
+
         except Exception as e:
             st.error(f"섹션 '{section}'에 내용을 추가하는 중 오류가 발생했습니다: {str(e)}")
     return doc
+
 
 def download_docx(doc):
     # 메모리 상의 파일 객체 생성

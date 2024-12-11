@@ -12,6 +12,7 @@ from docx import Document
 from io import BytesIO
 from difflib import SequenceMatcher
 from pdfminer.high_level import extract_text
+from difflib import SequenceMatcher
 
 #연구계획서 ID 생성
 def generate_research_id():
@@ -1686,38 +1687,43 @@ def review_full_research_plan():
         if content:
             full_content += f"{section}:\n{content}\n\n"
 
-    # 전체 내용을 검토하고 피드백을 제공하도록 AI에게 요청
+# 전체 내용을 검토하고 피드백을 제공하도록 AI에게 요청
     prompt = f"""
-    다음은 작성된 연구계획서의 전체 내용입니다. 
-    제가 작성한 연구계획서를 검토하고, 수정이 필요한 부분만 지적하며, 기존 문장을 어떻게 수정하면 좋을지 구체적인 예시를 들어서 제안해 주세요. 
-    다음의 두 가지 파트로 나누어 수정 제안을 해 주세요:
+    다음은 작성된 연구계획서의 전체 내용입니다.
+    제가 작성한 연구계획서를 검토하고, 다음의 세 가지 지침을 바탕으로 수정이 필요한 부분만 지적해 주세요:
+    1. 반드시 기존 문장을 인용하여, 어떤 문장이 수정이 필요한지 명확히 표시해 주세요.
+    2. 수정 제안은 해당 문장을 어떻게 바꾸면 좋을지 구체적인 예시를 포함해 주세요.
+    3. 두루뭉술한 표현은 피하고, 모든 피드백은 구체적이고 명확한 문장으로 작성해 주세요.
+
+    다음의 두 가지 파트로 나누어 피드백을 작성해 주세요:
 
     **1. 맥락에 맞지 않거나 중복된 부분, 틀린 글자 등 수정**
-    - 내용의 논리적 흐름: 처음부터 끝까지 내용이 논리적으로 흐르는지 확인하고, 맥락에 맞지 않는 부분이나 구성이 부적절한 부분을 지적합니다.
-    - 오타 및 문법 오류: 틀린 글자나 문법적 오류를 찾아내고, 어떻게 수정하면 좋을지 구체적인 예시를 제시합니다.
-    
-    **2. IRB의 다음 네 가지 항목을 고려한 수정 제안.** 검토 시 다음의 네 가지 항목만 고려해 주세요
-        1. 연구 목적 및 배경
-        - 명확성: 연구의 목적이 명확하게 기술되어 있는지 확인합니다.
-        - 의의: 연구가 학문적, 사회적으로 어떤 기여를 할 수 있는지 평가합니다.
+    - 기존 문장 중 논리적으로 흐름이 맞지 않거나 맥락에서 벗어난 부분을 인용하고, 어떻게 수정하면 좋을지 구체적인 예시를 작성해 주세요.
+    - 오타 및 문법 오류가 있는 문장을 인용하고, 올바르게 수정한 예시를 제시해 주세요.
 
-        2. 연구 설계 및 방법론
-        - 적합성: 연구 설계가 연구 목적을 달성하는 데 적합한지 검토합니다.
-        - 타당성: 연구 방법론이 과학적으로 타당하고 재현 가능한지 평가합니다.
+    **2. IRB의 다음 네 가지 항목을 고려한 수정 제안**
+    아래 네 가지 항목을 검토하여, 수정이 필요한 문장을 인용하고 구체적으로 어떻게 수정할지 작성해 주세요:
+    1. 연구 목적 및 배경
+        - 명확성: 연구 목적이 명확하지 않은 문장을 인용하고, 어떻게 더 명확하게 수정할지 예시를 제공하세요.
+        - 의의: 연구의 의의를 충분히 설명하지 못한 문장을 인용하고, 추가해야 할 내용의 예시를 작성해 주세요.
 
-        3.참여자 모집 및 선정 기준
-        - 선정 기준: 참여자의 포함 및 제외 기준이 명확하고 합리적인지 확인합니다.
-        - 모집 방법: 참여자 모집 방식이 공정하고 차별적이지 않은지 검토합니다.
+    2. 연구 설계 및 방법론
+        - 적합성: 연구 설계가 부적절한 부분이 있다면 해당 문장을 인용하고, 이를 어떻게 개선할지 구체적으로 작성해 주세요.
+        - 타당성: 연구 방법론이 과학적으로 타당하지 않다면 해당 문장을 인용하고, 더 타당하게 수정된 예시를 제시해 주세요.
 
-        4.*데이터 분석 방법의 적절성
-        - 분석 방법 검토: 데이터 분석 방법이 연구 목적에 적합하고, 과학적으로 타당한지 검토합니다.
-        - 통계적 유의성 확보: 데이터의 통계적 분석이 충분히 검증되었는지 확인합니다.
-    
-    주의사항:
-    - 잘된 점은 언급하지 않고, 수정이 필요한 부분만 지적합니다.
-    - 기존 문장을 어떻게 수정하면 좋을지 구체적인 예시를 제공합니다.
-    - 프롬프트에 제시된 네 가지 기준 이외의 항목은 고려하지 않습니다.
+    3. 참여자 모집 및 선정 기준
+        - 선정 기준: 참여자 포함 및 제외 기준이 불명확하다면 해당 문장을 인용하고, 더 명확하게 수정된 예시를 작성해 주세요.
+        - 모집 방법: 참여자 모집 방식이 공정하지 않다면 해당 문장을 인용하고, 개선된 예시를 제시해 주세요.
 
+    4. 데이터 분석 방법의 적절성
+        - 분석 방법: 데이터 분석 방법이 부적절하다면 해당 문장을 인용하고, 개선된 분석 방법을 예시로 제시해 주세요.
+        - 통계적 유의성: 통계 분석의 타당성이 부족하다면 해당 문장을 인용하고, 더 적절한 방법을 예시로 제시해 주세요.
+
+    **주의사항:**
+    - 반드시 수정이 필요한 기존 문장을 인용해 주세요.
+    - 수정 제안은 단순히 "더 구체적으로 기술하세요"처럼 모호한 표현이 아니라, 구체적인 예시와 대체 문장을 포함해야 합니다.
+    - 잘된 점은 언급하지 않고, 수정이 필요한 부분만 지적해 주세요.
+    - 프롬프트에 제시된 기준 이외의 항목은 고려하지 마세요.
 
     전체 내용:
     {full_content}
@@ -1725,19 +1731,74 @@ def review_full_research_plan():
     
     try:
         if 'anthropic_client' in st.session_state and st.session_state.anthropic_client:
+            # AI 피드백 요청
             response = st.session_state.anthropic_client.messages.create(
                 model="claude-3-5-sonnet-20241022",
                 max_tokens=2000,
                 messages=[{"role": "user", "content": prompt}]
             )
+            feedback = response.content[0].text
+
+            # AI 피드백 출력
             st.markdown("### AI의 피드백:")
-            st.markdown(response.content[0].text)
+            st.markdown(feedback)
         else:
             st.error("API 클라이언트가 초기화되지 않았습니다. API 키를 다시 확인해주세요.")
     except anthropic.APIError as e:
         st.error(f"Anthropic API 오류: {str(e)}")
     except Exception as e:
         st.error(f"예상치 못한 오류 발생: {str(e)}")
+
+
+
+# 수정 전 텍스트 추출 함수
+def extract_original_text(full_content, feedback_line):
+    """
+    AI의 피드백을 기반으로 원본 텍스트에서 가장 유사한 문장을 추출합니다.
+    """
+    lines = full_content.split("\n")
+    best_match = None
+    highest_similarity = 0
+
+    for line in lines:
+        # 피드백과 원본 텍스트의 유사도 계산
+        similarity = SequenceMatcher(None, feedback_line, line).ratio()
+        if similarity > highest_similarity:
+            highest_similarity = similarity
+            best_match = line
+
+    # 유사도가 0.5 이상일 때만 반환 (너무 낮은 경우는 무시)
+    if highest_similarity > 0.5:
+        return best_match
+    return "원본 텍스트를 찾을 수 없습니다."
+
+#수정 제안 반영 함수
+def apply_suggestion(original_text, feedback_line):
+    """
+    AI 피드백과 원본 텍스트를 기반으로 수정된 텍스트를 생성합니다.
+    """
+    if not original_text or original_text == "원본 텍스트를 찾을 수 없습니다.":
+        return "원본 텍스트를 찾을 수 없어서 수정 제안을 적용할 수 없습니다."
+
+    # AI에게 수정 요청
+    prompt = f"""
+    다음은 연구계획서의 일부 내용입니다:
+    {original_text}
+
+    AI의 피드백은 다음과 같습니다:
+    {feedback_line}
+
+    위 피드백을 반영하여 문장을 개선하세요. 문법적으로 올바르고 연구계획서 형식에 맞게 작성해주세요.
+    """
+    try:
+        response = st.session_state.anthropic_client.messages.create(
+            model="claude-3-5-sonnet-20241022",
+            max_tokens=500,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.content[0].text.strip()
+    except Exception as e:
+        return f"수정된 텍스트를 생성하는 중 오류가 발생했습니다: {str(e)}"
 
 
         

@@ -1754,7 +1754,7 @@ def review_full_research_plan():
             # AI 피드백 요청
             response = st.session_state.anthropic_client.messages.create(
                 model="claude-3-5-sonnet-20241022",
-                max_tokens=2000,
+                max_tokens=4000,
                 messages=[{"role": "user", "content": prompt}]
             )
             feedback = response.content[0].text
@@ -1937,6 +1937,13 @@ def render_section_page():
         st.session_state.current_section = 'home'
         st.rerun()
 
+#텍스트 길이 계산해서 편집창 크기 조절하는 함수
+def calculate_dynamic_height(text, char_per_line=50, line_height=20, base_padding=20, min_height=68):
+    # 텍스트에 따라 줄 수 계산
+    lines = (len(text) // char_per_line) + 1  # 텍스트 길이 기반으로 줄 수 계산
+    calculated_height = (lines * line_height) + base_padding  # 줄 높이에 패딩 추가
+    return max(calculated_height, min_height)  # 최소 높이 보장
+
 def render_preview_mode():
     st.markdown("## 전체 연구계획서 미리보기")
     st.markdown("각 섹션의 내용은 편집 가능합니다.")
@@ -1946,10 +1953,12 @@ def render_preview_mode():
     for section, content in sections_content.items():
         if section not in ["참고문헌", "3. 선정기준, 제외기준"]:  # 참고문헌 및 분리된 선정/제외 기준 처리 제외
             st.markdown(f"### {section}")
+            # 동적으로 높이를 계산
+            dynamic_height = calculate_dynamic_height(content)
             section_content = st.text_area(
                 f"{section} 내용 편집",
                 value=content,
-                height=300,
+                height=dynamic_height,
                 key=f"edit_{section}"
             )
             if st.button(f"{section} 저장", key=f"save_{section}"):
@@ -1964,10 +1973,11 @@ def render_preview_mode():
                 selected, excluded = content, "내용 없음"
 
             st.markdown("### 3-1. 선정기준")
+            selected_height = calculate_dynamic_height(selected.strip().replace("선정기준:", "").strip())
             selected_content = st.text_area(
                 "3-1. 선정기준 내용 편집",
                 value=selected.strip().replace("선정기준:", "").strip(),
-                height=300,
+                height=selected_height,
                 key="edit_3-1"
             )
             if st.button("3-1. 선정기준 저장", key="save_3-1"):
@@ -1975,10 +1985,11 @@ def render_preview_mode():
                 st.success("3-1. 선정기준 내용이 저장되었습니다.")
 
             st.markdown("### 3-2. 제외기준")
+            excluded_height = calculate_dynamic_height(excluded.strip())
             excluded_content = st.text_area(
                 "3-2. 제외기준 내용 편집",
                 value=excluded.strip(),
-                height=300,
+                height=excluded_height,
                 key="edit_3-2"
             )
             if st.button("3-2. 제외기준 저장", key="save_3-2"):
@@ -1989,10 +2000,11 @@ def render_preview_mode():
     st.markdown("---")
     st.markdown("### 참고문헌")
     references_content = load_section_content("참고문헌")
+    references_height = calculate_dynamic_height(references_content)
     references_content = st.text_area(
         "참고문헌 내용에 수정이 필요하면 편집하세요",
         value=references_content,
-        height=300,
+        height=references_height,
         key="edit_references"
     )
     if st.button("참고문헌 저장", key="save_references"):
@@ -2015,10 +2027,12 @@ def render_preview_mode():
         else:
             st.warning("점검 요청이 이미 진행되었습니다. 새로고침 후 다시 시도하세요.")
 
-    # 피드백 표시
+    # 피드백 표시 (타임라인 형식)
     if st.session_state.review_feedback:
         st.markdown("#### AI 피드백")
         st.markdown(st.session_state.review_feedback)
+
+
 
     # 초기화 버튼 설명
     st.markdown("피드백을 재요청 하려면 `피드백 상태 초기화` 후 다시 `피드백 요청하기` 버튼을 누르세요 ")

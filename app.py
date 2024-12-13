@@ -1706,13 +1706,23 @@ def review_full_research_plan():
     3. 수정 제안은 해당 문장을 어떻게 바꾸면 좋을지 구체적인 예시를 포함해 주세요.
     4. 두루뭉술한 표현은 피하고, 모든 피드백은 구체적이고 명확한 문장으로 작성해 주세요.
 
-    출력 형식:
-    1. 기존 문장과 수정 예시는 반드시 Markdown 코드블럭(```) 안에 포함하여 제시해 주세요.
-    2. **`수정 이유:`**, **`기존 문장:`**, **`수정 예시:`**라는 헤더 아래에 각각 구분하여 작성해 주세요.
-    3. 수정 이유는 코드블럭 밖에 작성하고, 기존 문장과 수정 예시는 코드블럭 안에 작성해 주세요.
-    4. 모든 피드백은 각 항목별로 명확히 구분되어야 합니다.
+    **출력 형식 (반드시 준수):**
+    - 피드백에는 수정 제안이 발생한 섹션 이름을 반드시 포함해야 합니다.
+    - 필요에 따라 섹션 이름을 여러 번 사용해도 무방합니다.
+    - 각 수정 제안은 다음과 같은 구조로 작성해주세요:
 
-    다음의 두 가지 파트로 나누어 피드백을 작성해 주세요:
+    <섹션 이름>: {{섹션 제목}}
+    수정 이유: {{수정 이유를 구체적으로 설명}}
+    기존 문장: ```{{기존 문장}}```
+    수정 예시: ```{{수정 예시}}```
+
+    예시:
+    <섹션 이름>: 1. 연구 목적
+    수정 이유: 연구 목적의 명확성이 부족합니다.
+    기존 문장: ```본 연구는 신장 조직 검사를 통해 ...```
+    수정 예시: ```본 연구는 신장 조직 검사를 활용하여 정확한 진단 기준을 수립하는 것을 목표로 합니다.```
+
+    **피드백 작성 지침:**
 
     **1. 맥락에 맞지 않거나 중복된 부분, 틀린 글자 등 수정**
     - 기존 문장 중 논리적으로 흐름이 맞지 않거나 맥락에서 벗어난 부분을 인용하고, 어떻게 수정하면 좋을지 구체적인 예시를 작성해 주세요.
@@ -2027,12 +2037,53 @@ def render_preview_mode():
         else:
             st.warning("점검 요청이 이미 진행되었습니다. 새로고침 후 다시 시도하세요.")
 
-    # 피드백 표시 (타임라인 형식)
+    # 피드백 표시
     if st.session_state.review_feedback:
         st.markdown("#### AI 피드백")
-        st.markdown(st.session_state.review_feedback)
+        # 디버깅을 위한 AI 생성 피드백 원문 표시
+        st.markdown("### 디버깅: AI 생성 피드백 원문")
+        st.text_area("AI 생성 피드백 원문", value=st.session_state.review_feedback, height=300)
 
+        feedback_data = st.session_state.review_feedback.split("\n\n")  # 피드백을 개별 섹션으로 분리
 
+        for feedback in feedback_data:
+            # 섹션 이름 추출
+            section_match = re.search(r"<섹션 이름>:\s*(.+)", feedback)
+            section_name = section_match.group(1) if section_match else None
+
+            # 수정 이유 추출
+            reason_match = re.search(r"수정 이유:\s*(.+)", feedback)
+            reason_text = reason_match.group(1).strip() if reason_match else None
+
+            # 기존 문장 추출
+            original_match = re.search(r"기존 문장:\s*```([^`]+)```", feedback, re.DOTALL)
+            original_text = original_match.group(1).strip() if original_match else None
+
+            # 수정 예시 추출
+            suggestion_match = re.search(r"수정 예시:\s*```([^`]+)```", feedback, re.DOTALL)
+            suggestion_text = suggestion_match.group(1).strip() if suggestion_match else None
+
+            # 섹션 이름이 없거나 수정 이유와 같은 필수 항목이 없는 경우 표시하지 않음
+            if not section_name or not reason_text:
+                continue
+
+            # 카드 형태로 피드백 표시
+            st.markdown(f"""
+            <div style="border: 1px solid #ddd; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+                <h5 style="margin: 0;">섹션 이름: {section_name}</h5>
+                <p><strong>수정 이유:</strong> {reason_text}</p>
+                <div style="display: flex; justify-content: space-between; align-items: stretch;">
+                    <div style="flex: 1; background-color: #f9f9f9; padding: 10px; margin-right: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <strong>기존 문장:</strong>
+                        <p>{original_text or '없음'}</p>
+                    </div>
+                    <div style="flex: 1; background-color: #e6f7ff; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <strong>수정 예시:</strong>
+                        <p>{suggestion_text or '없음'}</p>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
     # 초기화 버튼 설명
     st.markdown("피드백을 재요청 하려면 `피드백 상태 초기화` 후 다시 `피드백 요청하기` 버튼을 누르세요 ")

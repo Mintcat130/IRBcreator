@@ -2040,10 +2040,6 @@ def render_preview_mode():
     # 피드백 표시
     if st.session_state.review_feedback:
         st.markdown("#### AI 피드백")
-        # 디버깅을 위한 AI 생성 피드백 원문 표시
-        st.markdown("### 디버깅: AI 생성 피드백 원문")
-        st.text_area("AI 생성 피드백 원문", value=st.session_state.review_feedback, height=300)
-
         feedback_data = st.session_state.review_feedback.split("\n\n")  # 피드백을 개별 섹션으로 분리
 
         for feedback in feedback_data:
@@ -2084,6 +2080,10 @@ def render_preview_mode():
                 </div>
             </div>
             """, unsafe_allow_html=True)
+         # 디버깅을 위한 AI 생성 피드백 원문 표시
+        with st.expander("AI 생성 피드백 원문 보기"):
+            st.text_area("", value=st.session_state.review_feedback, height=300)
+
 
     # 초기화 버튼 설명
     st.markdown("피드백을 재요청 하려면 `피드백 상태 초기화` 후 다시 `피드백 요청하기` 버튼을 누르세요 ")
